@@ -34,9 +34,9 @@ public class VM {
                         CommandIfEq = -15,
                         CommandIfNotEq = -16,
                         CommandIfLessEq = -17,
-                        CommandLessThan = -18,
-                        CommandGreaterEq = -19,
-                        CommandGreaterThan = -20,
+                        CommandIfLessThan = -18,
+                        CommandIfGreaterEq = -19,
+                        CommandIfGreaterThan = -20,
                         CommandInput = -21,
                         CommandOutput = -22,
                         CommandOutLn = -23;
@@ -160,21 +160,21 @@ public class VM {
                         SP += 3;
                         break;
                         
-                    case CommandLessThan :
+                    case CommandIfLessThan :
                         if(Memory[SP+2] < Memory[SP+1]){
                             PC = Memory[SP];
                         }
                         SP += 3;
                         break;
                         
-                    case CommandGreaterEq :
+                    case CommandIfGreaterEq :
                         if(Memory[SP+2] >= Memory[SP+1]){
                             PC = Memory[SP];
                         }
                         SP += 3;
                         break;
                         
-                    case CommandGreaterThan :
+                    case CommandIfGreaterThan :
                         if(Memory[SP+2] > Memory[SP+1]){
                             PC = Memory[SP];
                         }

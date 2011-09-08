@@ -5,9 +5,9 @@ package JavaO.Tables;
  * @author nikita
  */
 public class TableItem {
-    String Name;
-    int Category;
-    int Type;
-    int Val;
-    TableItem Prev;
+    public String Name;
+    public int Category;
+    public int Type;
+    public int Val;
+    //public TableItem Prev;
 }

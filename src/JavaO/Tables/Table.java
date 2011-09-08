@@ -22,7 +22,7 @@ public class Table {
                     TypeBool = 1,
                     TypeNone = 2;
     
-    /*private*/ static ArrayList NamesTable = new ArrayList<TableItem>();
+    public static ArrayList NamesTable = new ArrayList<TableItem>();
     
     /*private*/ static int Top = -1, Bottom = -1, Current = -1;
     
@@ -92,12 +92,12 @@ public class Table {
         return (TableItem)NamesTable.get(Index);
     }
     
-    static TableItem FirstVar(){
+    public static TableItem FirstVar(){
         Current = Top;
         return NextVar();
     }
     
-    static TableItem NextVar(){
+    public static TableItem NextVar(){
         TableItem Item;
         while(Current != Bottom && 
                 ((TableItem)NamesTable.get(Current)).Category != CategoryVar){
