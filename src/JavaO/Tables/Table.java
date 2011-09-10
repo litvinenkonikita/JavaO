@@ -11,14 +11,14 @@ import JavaO.ErrorMessage;
 
 public class Table {
     
-    static final int CategoryConst = 1,
+    public static final int CategoryConst = 1,
                     CategoryVar = 2,
                     CategoryType = 3,
                     CategoryStProc = 4,
                     CategoryModule = 5,
                     CategoryGuard = 6;
     
-    static final int TypeInt = 0,
+    public static final int TypeInt = 0,
                     TypeBool = 1,
                     TypeNone = 2;
     
@@ -26,7 +26,7 @@ public class Table {
     
     /*private*/ static int Top = -1, Bottom = -1, Current = -1;
     
-    static void enterName(String Name, int Category, int Type, int Value){
+    public static void enterName(String Name, int Category, int Type, int Value){
         TableItem Item = new TableItem();
         Item.Name = new String(Name);
         Item.Category = Category;
@@ -37,14 +37,14 @@ public class Table {
         NamesTable.add(Item);
     }
     
-    static void openScope(){
+    public static void openScope(){
         enterName("", CategoryGuard, TypeNone, 0);
         if(Top == 0){
             Bottom = Top;
         }
     }
     
-    static void closeScope(){
+    public static void closeScope(){
         while(((TableItem)NamesTable.get(Top)).Category != CategoryGuard){
             NamesTable.remove(Top--);
             //Top--;
@@ -54,7 +54,7 @@ public class Table {
         Bottom = Top;
     }
     
-    static TableItem NewName(String Name, int Category){
+    public static TableItem NewName(String Name, int Category){
         int ItemKey = Top;
         TableItem Item = (TableItem)NamesTable.get(ItemKey);
         while(Item.Category != CategoryGuard && Item.Name.compareTo(Name) != 0){
@@ -76,7 +76,7 @@ public class Table {
         return Item;
     }
     
-    static TableItem findName(String Name){
+    public static TableItem findName(String Name){
         int Index = -1, i = 0;
         TableItem Item;
         for(Iterator<TableItem> Iter = NamesTable.iterator(); Iter.hasNext(); i++){
