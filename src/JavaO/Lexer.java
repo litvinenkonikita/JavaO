@@ -6,7 +6,7 @@ package JavaO;
  */
 
 
-import java.lang.StringBuffer;
+//import java.lang.StringBuffer;
 
 public class Lexer {
     
@@ -197,9 +197,9 @@ public class Lexer {
                     
                 case '(' :
                     Text.NextChar();
-                    if(Text.CurrentChar == (int)'*'){
+                    if(Text.CurrentChar == '*'){
                         Comment();
-                        Text.NextChar();
+                        Lexer.NextLex();
                     }
                     else{
                         CurrentLex = LexLeftPar;
@@ -274,6 +274,7 @@ public class Lexer {
         enterKeyword("WHILE", LexWhile);
         enterKeyword("WITH", LexNone);
 
-        Text.NextChar();
+        Lexer.NextLex();
+        //System.out.println("Lexer : " + Lexer.CurrentLex + " " + Lexer.CurrentName);
     }
 }

@@ -5,20 +5,16 @@ package JavaO;
  * @author Nikita
  */
 
-import java.util.Iterator;
+//import java.util.Iterator;
 
 import JavaO.Tables.TableItem;
 import JavaO.Tables.Table;
         
 public class CodeGen {
     
-    static int PC;
+    static int PC = 0;
     
-    static void init(){
-        PC = 0;
-    }
-    
-    static void genCommand(int Command){
+    static void Command(int Command){
         VM.Memory[PC++] = Command;
     }
     
@@ -31,91 +27,90 @@ public class CodeGen {
     }
     
     static void Abs(){
-        genCommand(VM.CommandDup);
-        genCommand(0);
-        genCommand(PC+3);  //  Адрес перехода вперёд (?)
-        genCommand(VM.CommandIfGreaterEq);
-        genCommand(VM.CommandNeg);
+        Command(VM.CommandDup);
+        Command(0);
+        Command(PC+3);  //  Адрес перехода вперёд (?)
+        Command(VM.CommandIfGreaterEq);
+        Command(VM.CommandNeg);
     }
     
     static void Min(){
-        genCommand(Integer.MAX_VALUE);
-        genCommand(VM.CommandNeg);
-        genCommand(1);
-        genCommand(VM.CommandSub);
+        Command(Integer.MAX_VALUE);
+        Command(VM.CommandNeg);
+        Command(1);
+        Command(VM.CommandSub);
     }
     
     static void Odd(){
-        genCommand(2);
-        genCommand(VM.CommandMod);
-        genCommand(0);
-        genCommand(0); //  Адрес перехода вперёд
-        genCommand(VM.CommandIfEq);
+        Command(2);
+        Command(VM.CommandMod);
+        Command(0);
+        Command(0); //  Адрес перехода вперёд
+        Command(VM.CommandIfEq);
     }
     
     static void Const(int Const){
-        genCommand(Math.abs(Const));
+        Command(Math.abs(Const));
         if(Const < 0){
-            genCommand(VM.CommandNeg);
+            Command(VM.CommandNeg);
         }
     }
     
     static void Compare(int Lex){// "Comparing"
-        genCommand(0);
+        Command(0);
         switch(Lex){
             case Lexer.LexEq :
-                genCommand(VM.CommandIfNotEq);
+                Command(VM.CommandIfNotEq);
                 break;
             case Lexer.LexNotEq :
-                genCommand(VM.CommandIfEq);
+                Command(VM.CommandIfEq);
                 break;
             case Lexer.LexLessEq :
-                genCommand(VM.CommandIfGreaterThan);
+                Command(VM.CommandIfGreaterThan);
                 break;
             case Lexer.LexLessThan :
-                genCommand(VM.CommandIfGreaterEq);
+                Command(VM.CommandIfGreaterEq);
                 break;
             case Lexer.LexGreaterEq :
-                genCommand(VM.CommandIfLessThan);
+                Command(VM.CommandIfLessThan);
                 break;
             case Lexer.LexGreaterThan :
-                genCommand(VM.CommandIfLessEq);
+                Command(VM.CommandIfLessEq);
                 break;
         }
     }
     
     static void Address(TableItem Item){
-        genCommand(Item.Val);
+        Command(Item.Val);
         Item.Val = PC+1;
     }
     
     static void allocateVariables(){
         int i = 0;
-        TableItem Item;
+        TableItem Item = Table.FirstVar();
         
         // НАОБОРОТ!!! ?
-        for(Iterator<TableItem> Iter = Table.NamesTable.iterator(); Iter.hasNext(); i++){
-            Item = Iter.next();
+//        for(Iterator<TableItem> Iter = Table.NamesTable.iterator(); Iter.hasNext(); i++){
+//            Item = Iter.next();
+//            if(Item.Val == 0){
+//                ErrorMessage.Warning("Varible " + Item.Name + "not used.");
+//            }
+//            else{
+//                fixup(Item.Val);
+//                PC++;
+//            }
+//        }
+        
+        while(Item != null){
             if(Item.Val == 0){
-                ErrorMessage.Warning("Varible " + Item.Name + "not used.");
+                ErrorMessage.Warning("Varible " + Item.Name + " not used.");
             }
             else{
                 fixup(Item.Val);
                 PC++;
             }
+            Item = Table.NextVar();
         }
-        
-        
-//        while(){
-//            if(CurrentVar.Val == 0){
-//                ErrorMessage.Warning("Varible " + CurrentVar.Name + "not used.");
-//            }
-//            else{
-//                fixup(CurrentVar.Val);
-//                PC++;
-//            }
-//            CurrentVar = Table.NextVar();
-//        }
     }
     
     

@@ -9,5 +9,4 @@ public class TableItem {
     public int Category;
     public int Type;
     public int Val;
-    //public TableItem Prev;
 }

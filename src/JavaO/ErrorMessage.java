@@ -9,7 +9,7 @@ package JavaO;
 
 public class ErrorMessage {
     public static void Error(String Msg){
-        System.out.println("Error at " + Location.Line + " line :\n\n" + Msg);
+        System.out.println("Error at " + Location.Pos + " position " + Location.Line + " line :\n\n" + Msg);
         System.exit(0);
     }
     

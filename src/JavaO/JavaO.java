@@ -11,24 +11,23 @@ public class JavaO {
     static void init(){
         Text.reset();
         if(!Text.Ok){
-            //Error.Message(Text.Message);
+            ErrorMessage.Error(Text.Message);
         }
-        //Scan.init();
-        //Gen.init();
+        Lexer.init();
     }
 
-    public static void main(String[] args){
-        System.out.println("\nJavaO compiler...");
-        if(args.length == 0){
-            Location.Path = null;
-        }
-        else {
-            Location.Path = args[0];
-        }
+    public static void run(){
+//        System.out.println("\nJavaO compiler...");
+//        if(args.length == 0){
+//            Location.Path = null;
+//        }
+//        else {
+//            Location.Path = args[0];
+//        }
         
         init();
-        //Pars.compile();
-        //Ovm.run();
+        Syntax.compile();
+        VM.run();
     }
     
 }

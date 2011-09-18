@@ -1,0 +1,10 @@
+MODULE test;
+VAR i : INTEGER;
+
+BEGIN
+    (*
+        sdfsdf
+        
+        *)
+    i := 0;
+END test.
