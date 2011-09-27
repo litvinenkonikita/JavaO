@@ -22,9 +22,17 @@ public class Table {
                     TypeBool = 1,
                     TypeNone = 2;
     
-    public static ArrayList NamesTable = new ArrayList<TableItem>();
+    //public static ArrayList NamesTable = new ArrayList<TableItem>();
+    public static ArrayList NamesTable;
     
-    /*private*/ static int Top = -1, Bottom = -1, Current = -1;
+    /*private*/ static int Top, Bottom, Current;
+    
+    public static void init(){
+        Top = -1;
+        Bottom = -1;
+        Current = -1;
+        NamesTable = new ArrayList<TableItem>();
+    }
     
     public static void enterName(String Name, int Category, int Type, int Value){
         TableItem Item = new TableItem();
@@ -54,7 +62,7 @@ public class Table {
         Bottom = Top;
     }
     
-    public static TableItem NewName(String Name, int Category){
+    public static TableItem NewName(String Name, int Category) throws Exception {
         int ItemKey = Top;
         TableItem Item = (TableItem)NamesTable.get(ItemKey);
         while(Item.Category != CategoryGuard && Item.Name.compareTo(Name) != 0){
@@ -76,7 +84,7 @@ public class Table {
         return Item;
     }
     
-    public static TableItem findName(String Name){
+    public static TableItem findName(String Name) throws Exception {
         int Index = -1, i = 0;
         TableItem Item;
         for(Iterator<TableItem> Iter = NamesTable.iterator(); Iter.hasNext(); i++){

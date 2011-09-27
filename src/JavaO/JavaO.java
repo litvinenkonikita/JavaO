@@ -1,5 +1,7 @@
 package JavaO;
 
+import JavaO.Tables.Table;
+
 /**
  *
  * @author Litvinenko Nikita
@@ -8,26 +10,23 @@ package JavaO;
 //import java.io.*;
 public class JavaO {
     
-    static void init(){
+    static void init() throws Exception {
         Text.reset();
-        if(!Text.Ok){
-            ErrorMessage.Error(Text.Message);
-        }
+        //if(!Text.Ok){
+            //ErrorMessage.Error(Text.Message);
+        //}
+        Table.init();
         Lexer.init();
+        CodeGen.init();
+        VM.init();
     }
 
-    public static void run(){
-//        System.out.println("\nJavaO compiler...");
-//        if(args.length == 0){
-//            Location.Path = null;
-//        }
-//        else {
-//            Location.Path = args[0];
-//        }
-        
+    public static void run() throws Exception {
         init();
         Syntax.compile();
-        VM.run();
+        if(ErrorMessage.getOk()){
+            VM.run();
+        }
     }
     
 }

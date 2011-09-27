@@ -32,15 +32,16 @@ public class Lexer {
     static int CurrentNum;
     
     private static int KeywordsNum = 34;
-    private static int NextKeywordNumber = 0;
+    private static int NextKeywordNumber;
     
     static private class Item {
         String Word;
         int Lex;
     }
     
-    private static Item[] KeywordsTable = new Item[KeywordsNum];
-    
+    //private static Item[] KeywordsTable = new Item[KeywordsNum];
+    private static Item[] KeywordsTable;
+
     private static void enterKeyword(String LexName , int LexType){
         (KeywordsTable[NextKeywordNumber] = new Item()).Word = new String(LexName);
         KeywordsTable[NextKeywordNumber++].Lex = LexType;
@@ -56,7 +57,7 @@ public class Lexer {
     }
     
     
-    private static void Ident(){
+    private static void Ident() throws Exception{
         int i = 0;
         Buffer.setLength(0);
         do{
@@ -73,7 +74,7 @@ public class Lexer {
     }
     
     
-    private static void Number(){
+    private static void Number() throws Exception{
         CurrentLex = LexNum;
         CurrentNum = 0;
         do {
@@ -89,7 +90,7 @@ public class Lexer {
     }
     
     
-    private static void  Comment(){
+    private static void  Comment() throws Exception{
         Text.NextChar();
         do{
             while(Text.CurrentChar != '*' && Text.CurrentChar != Text.CharEOT){
@@ -120,7 +121,7 @@ public class Lexer {
     }
     
     
-    static void NextLex(){
+    static void NextLex() throws Exception{
         while(Text.CurrentChar == Text.CharEOL ||
               Text.CurrentChar == Text.CharSpace ||
               Text.CurrentChar == Text.CharTab)
@@ -227,6 +228,9 @@ public class Lexer {
                     break;
                     
                 case Text.CharEOT :
+//                    if(FirstEOT){
+//                        FirstEOT = false;
+//                    }
                     CurrentLex = LexEOT;
                     break;
                     
@@ -238,7 +242,9 @@ public class Lexer {
     }
     
     
-    static void init(){
+    static void init() throws Exception {
+        KeywordsTable = new Item[KeywordsNum];
+        NextKeywordNumber = 0;
         enterKeyword("ARRAY", LexNone);
         enterKeyword("BY", LexNone);
         enterKeyword("BEGIN", LexBegin);
@@ -275,6 +281,5 @@ public class Lexer {
         enterKeyword("WITH", LexNone);
 
         Lexer.NextLex();
-        //System.out.println("Lexer : " + Lexer.CurrentLex + " " + Lexer.CurrentName);
     }
 }

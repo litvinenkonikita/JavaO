@@ -22,7 +22,7 @@ public class Syntax {
                     StProcOutInt = 10,
                     StProcOutLn = 11;
     // Check lex
-    static void checkLex(int Lex, String Message){
+    static void checkLex(int Lex, String Message) throws Exception {
         if(Lexer.CurrentLex != Lex){
             ErrorMessage.Expected(Message + " current = " + Lexer.CurrentLex + " Lex = " + Lex);
         }
@@ -32,7 +32,7 @@ public class Syntax {
     }
     
     //  [+ | =] (Num | Name)
-    static int ConstExpr(){
+    static int ConstExpr() throws Exception {
         int val = 0;
         TableItem X;
         int Op = Lexer.LexPlus;
@@ -71,7 +71,7 @@ public class Syntax {
     }
     
     // Name "=" ConstExpr;
-    static void ConstDeclaration(){
+    static void ConstDeclaration() throws Exception {
         TableItem ConstItem;
         ConstItem = Table.NewName(Lexer.CurrentName, Table.CategoryGuard);
         Lexer.NextLex();
@@ -82,7 +82,7 @@ public class Syntax {
     }
     
     //  Parse type name
-    static void Type(){
+    static void Type() throws Exception {
         TableItem TypeItem;
         if(Lexer.CurrentLex != Lexer.LexName){
             ErrorMessage.Expected("Type name");
@@ -100,7 +100,7 @@ public class Syntax {
     }
     
     // Name {"," Name} ":" Type;
-    static void VarDeclaration(){
+    static void VarDeclaration() throws Exception {
         TableItem VarItem;
         if(Lexer.CurrentLex != Lexer.LexName){
             ErrorMessage.Expected("Name");
@@ -128,7 +128,7 @@ public class Syntax {
     
     
     //  { CONST { ConstDeclaration ";"} | VAR { VarDeclaration ";"} }
-    static void DeclarationSequence(){
+    static void DeclarationSequence() throws Exception {
         while(Lexer.CurrentLex == Lexer.LexConst || Lexer.CurrentLex == Lexer.LexVar){
             if(Lexer.CurrentLex == Lexer.LexConst){
                 Lexer.NextLex();
@@ -150,14 +150,14 @@ public class Syntax {
     
     
     //  Integer expression (целочисленное выражение) 
-    static void IntExpression(){
+    static void IntExpression() throws Exception {
         if(Expression() != Table.TypeInt){
             ErrorMessage.Expected("Int expression");
         }
     }
     
     // Стандартная функция
-    static int StandardFunction(int Func){
+    static int StandardFunction(int Func) throws Exception {
         switch(Func){
             case StProcABS :
                 IntExpression();
@@ -183,7 +183,7 @@ public class Syntax {
     }
     
     // Множитель
-    static int Factor(){
+    static int Factor() throws Exception {
         TableItem Item;
         int Type = 0;
         if(Lexer.CurrentLex == Lexer.LexName){
@@ -220,7 +220,6 @@ public class Syntax {
             checkLex(Lexer.LexRightPar, "\")\"");
         }
         else{
-            
             ErrorMessage.Expected("Name, number or \"(\"");
         }
         return Type;
@@ -228,7 +227,7 @@ public class Syntax {
     
     
     // Factor { operation Factor }
-    static int Term(){
+    static int Term() throws Exception {
         int Operation;
         int Type = Factor();
         if(Lexer.CurrentLex == Lexer.LexMult || 
@@ -266,7 +265,7 @@ public class Syntax {
     
     
     // [+|-] Term {[+|-] Term}
-    static int SimpleExpression(){
+    static int SimpleExpression() throws Exception {
         int Type;
         int Operation;
         if(Lexer.CurrentLex == Lexer.LexPlus ||
@@ -315,7 +314,7 @@ public class Syntax {
     
     
     //  SimpleExpression [ > | >= | < | <= | = | #  SimpleExpression ]
-    static int Expression(){
+    static int Expression() throws Exception {
         int Type = SimpleExpression();
         int Operation;
         if(Lexer.CurrentLex == Lexer.LexEq ||
@@ -341,7 +340,7 @@ public class Syntax {
     
     
     // Name
-    static void Variable(){
+    static void Variable() throws Exception {
         TableItem VarItem;
         if(Lexer.CurrentLex != Lexer.LexName){
             ErrorMessage.Expected("Name");
@@ -357,7 +356,7 @@ public class Syntax {
     
     
     //
-    static void StandardProcedure(int StProc){
+    static void StandardProcedure(int StProc) throws Exception {
         //System.out.println(StProc + " " + StProcOutInt);
         switch(StProc){
             case StProcDEC :
@@ -419,7 +418,7 @@ public class Syntax {
     
     
     //
-    static void BoolExpression(){
+    static void BoolExpression() throws Exception {
         if(Expression() != Table.TypeBool){
             ErrorMessage.Expected("Bool expression");
         }
@@ -427,7 +426,7 @@ public class Syntax {
     
     
     //  Variable "=" IntExpression ";"
-    static void AssignmentStatement(){
+    static void AssignmentStatement() throws Exception {
         Variable();
         if(Lexer.CurrentLex == Lexer.LexAss){
             Lexer.NextLex();
@@ -441,7 +440,7 @@ public class Syntax {
     
     
     //  Name ["(" [IntExpression | Variable] ")"]
-    static void CallStatement(int StProc){
+    static void CallStatement(int StProc) throws Exception {
         checkLex(Lexer.LexName, "procedure name");
         if(Lexer.CurrentLex == Lexer.LexLeftPar){
             //System.out.println(Lexer.CurrentLex);
@@ -461,7 +460,7 @@ public class Syntax {
     //  IF "(" BoolExpression ")" THEN StatementSequence 
     //  { ELSIF StatementSequence } [ ELSE StatementSequence ]
     //  END
-    static void IfStatement(){
+    static void IfStatement() throws Exception {
         int ConditionPC;
         int LastGOTO = 0;
         checkLex(Lexer.LexIf, "IF");
@@ -496,7 +495,7 @@ public class Syntax {
     }
     
     // WHILE "(" BoolExpression ")" DO StatementSequence END
-    static void WhileStatement(){
+    static void WhileStatement() throws Exception {
         int WhilePC = CodeGen.PC;
         checkLex(Lexer.LexWhile, "WHILE");
         BoolExpression();
@@ -511,7 +510,7 @@ public class Syntax {
     
     
     //  | IfStatement | WhileStatement
-    static void Statement(){
+    static void Statement() throws Exception {
         TableItem Item;
         if(Lexer.CurrentLex == Lexer.LexName){
             if((Item = Table.findName(Lexer.CurrentName)).Category == Table.CategoryModule){
@@ -548,7 +547,7 @@ public class Syntax {
     
     
     //  Statement { ";" Statement }
-    static void StatementSequence(){
+    static void StatementSequence() throws Exception {
         Statement();
         while(Lexer.CurrentLex == Lexer.LexSemi){
             Lexer.NextLex();
@@ -558,7 +557,7 @@ public class Syntax {
     
     
     //
-    static void ImportModule(){
+    static void ImportModule() throws Exception {
         if(Lexer.CurrentLex == Lexer.LexName){
             Table.NewName(Lexer.CurrentName, Table.CategoryModule);
             if(Lexer.CurrentName.compareTo("In") == 0){
@@ -581,7 +580,7 @@ public class Syntax {
     
     
     // IMPORT Name {"," Name} ";"
-    static void Import(){
+    static void Import() throws Exception {
         checkLex(Lexer.LexImport, "IMPORT");
         ImportModule();
         while(Lexer.CurrentLex == Lexer.LexComma){
@@ -596,7 +595,7 @@ public class Syntax {
     //  [ Import ]
     //  DeclarationSequence
     //  [ BEGIN StatementSequence ] END Name "."
-    static void Module(){
+    static void Module() throws Exception {
         TableItem ModItem;
         checkLex(Lexer.LexModule, "MODULE");
         //System.out.println("!");
@@ -634,7 +633,7 @@ public class Syntax {
     
     
     //
-    static void compile(){
+    static void compile() throws Exception {
         Table.openScope();
         Table.enterName("ABS", Table.CategoryStProc, Table.TypeInt, StProcABS);
         Table.enterName("MAX", Table.CategoryStProc, Table.TypeInt, StProcMAX);
@@ -645,10 +644,11 @@ public class Syntax {
         Table.enterName("INC", Table.CategoryStProc, Table.TypeNone, StProcINC);
         Table.enterName("INTEGER", Table.CategoryType, Table.TypeInt, 0);
         Table.openScope();
+        //System.out.println("\nCompilation complete.");
         Module();
         Table.closeScope();
         Table.closeScope();
-        System.out.println("\nCompilation complete.");
+        VM.Result += "\nCompilation complete.";
     }
 
 }

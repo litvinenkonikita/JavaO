@@ -8,16 +8,33 @@ package JavaO;
 //import java.io.*;
 
 public class ErrorMessage {
-    public static void Error(String Msg){
+    
+    private static String Message = new String();
+    
+    private static boolean Ok = true;
+    
+    public static void Error(String Msg) throws Exception{
         System.out.println("Error at " + Location.Pos + " position " + Location.Line + " line :\n\n" + Msg);
-        System.exit(0);
+        Message = "Error at " + Location.Pos + " position " + Location.Line + " line :\n\n" + Msg;
+        Ok = false;
+        throw new Exception("Compilation error.");
+        //System.exit(0);
     }
     
-    public static void Expected(String Msg){
+    public static void Expected(String Msg) throws Exception{
         Error(Msg + " expected.");
     }
     
     public static void Warning(String Msg){
-        System.out.println("\nWarning : " + Msg);
+        //System.out.println("\nWarning : " + Msg);
+        Message = "\nWarning : " + Msg;
+    }
+    
+    public static String getMessage(){
+        return Message;
+    }
+    
+    public static boolean getOk(){
+        return Ok;
     }
 }

@@ -5,11 +5,11 @@ package JavaO;
  * @author nikita
  */
 
-import java.io.IOException;
+//import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.InputStreamReader;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
+//import java.io.FileWriter;
+//import java.io.BufferedWriter;
 
 public class VM {
     
@@ -44,29 +44,53 @@ public class VM {
                         CommandOutLn = -23;
     
     
-    static int Memory[] = new int[MemorySize];
+    //static int Memory[] = new int[MemorySize];
+    static int Memory[];
     
-    static void readln(){
-        try{
-            while(System.in.read() !=  '\n');
-        }
-        catch(IOException e){
-            
-        }
-    }
+//    static void readln(){
+//        try{
+//            while(System.in.read() !=  '\n');
+//        }
+//        catch(IOException e){
+//            
+//        }
+//    }
     
     private static StreamTokenizer input = 
             new StreamTokenizer(new InputStreamReader(System.in));
     
-    static int readInt(){
-        try{
-            input.nextToken();
-        }
-        catch(IOException e){}
-        return (int)input.nval;
+//    static int readInt(){
+//        try{
+//            input.nextToken();
+//        }
+//        catch(IOException e){}
+//        return (int)input.nval;
+//    }
+    
+//    private static BufferedWriter Output;
+    
+    private static String ByteCode/* = new String()*/;
+    static String Result/* = new String()*/;
+    private static String StackStates/* = new String()*/;
+    
+    public static String getByteCode(){
+        return ByteCode;
     }
     
-    private static BufferedWriter Output;
+    public static String getResult(){
+        return Result;
+    }
+    
+    public static String getStackStates(){
+        return StackStates;
+    }
+    
+    static void init(){
+        Memory = new int[MemorySize];
+        ByteCode = new String();
+        Result = new String();
+        StackStates = new String();
+    }
     
     static void run(){
         int PC = 0;
@@ -74,9 +98,9 @@ public class VM {
         Integer Command = new Integer(0);
         int Buffer;
         String CommandStr = new String();
-        try{
+//        try{
             
-            Output = new BufferedWriter(new FileWriter("Output.txt"));
+//            Output = new BufferedWriter(new FileWriter("Output.txt"));
         
             while((Command = Memory[PC++]) != CommandStop){
                 if(Command >= 0){
@@ -207,25 +231,28 @@ public class VM {
                             CommandStr = "IFGT";
                             break;
 
-                        case CommandInput :
-                            System.out.println("Input :");
-                            SP--;
-                            Memory[SP] = readInt();
-                            CommandStr = "INPUT";
-                            break;
+//                        case CommandInput :
+//                            System.out.println("Input :");
+//                            SP--;
+//                            Memory[SP] = readInt();
+//                            CommandStr = "INPUT";
+//                            break;
 
                         case CommandOutput :
                             int Tab = Memory[SP] - (new Integer(Memory[SP+1])).toString().length();
                             for(int i = 0; i <= Tab; i++){
-                                System.out.print(" ");
+                                //System.out.print(" ");
+                                Result += " ";
                             }
-                            System.out.print(Memory[SP+1]);
+                            //System.out.print(Memory[SP+1]);
+                            Result += Memory[SP+1];
                             SP += 2;
                             CommandStr = "OUTPUT";
                             break;
 
                         case CommandOutLn :
-                            System.out.println();
+                            //System.out.println();
+                            Result += '\n';
                             CommandStr = "OUTLN";
                             break;
 
@@ -234,27 +261,31 @@ public class VM {
                             break;
 
                         default :
-                            System.out.println("Invalid operation code.");
+                            Result += "\nInvalid operation code.";
                             break;
                     }
                 }
                 if(Command >= 0){
                     CommandStr = Command.toString();
                 }
-                Output.write(CommandStr + '\n');
+                ByteCode += CommandStr + '\n';
+                
+                if(Command < 0){
+                    StackStates += "command: " + CommandStr + "\n----------\n";
+                }
+                
+                for(int i = SP; i < MemorySize; i++){
+                    StackStates += Memory[i] + "\n";
+                }
+                StackStates += "\n==========\n\n";
+                
             }
-            Output.write(Command.toString());
-            Output.close();
-            System.out.println();
+            ByteCode += "STOP";
+            Result += '\n';
             if(SP < MemorySize){
-                System.out.println("Return code: " + Memory[SP]);
+                Result += "Return code: " + Memory[SP] + "\n\n";
             }
-            System.out.println("Press Enter!");
-            readln();
-        }
-        catch(IOException e){
-            System.err.println("File Output.txt error.");
-        }
+
     }
             
 }

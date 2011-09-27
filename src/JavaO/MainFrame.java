@@ -14,6 +14,7 @@ public class MainFrame extends javax.swing.JFrame {
     /** Creates new form MainFrame */
     public MainFrame() {
         initComponents();
+        setResizable(false);
     }
 
     /** This method is called from within the constructor to
@@ -38,6 +39,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane4 = new javax.swing.JScrollPane();
         StackStatesTextArea = new javax.swing.JTextArea();
         StackStatesLabel = new javax.swing.JLabel();
+        CloseButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -75,6 +77,13 @@ public class MainFrame extends javax.swing.JFrame {
 
         StackStatesLabel.setText("Состояния стека");
 
+        CloseButton.setText("Закрыть");
+        CloseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CloseButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -97,7 +106,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ByteCodeLabel))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(CloseButton)
+                        .addComponent(ByteCodeLabel)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(StackStatesLabel)
@@ -108,7 +119,9 @@ public class MainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(CompileRunButton)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(CompileRunButton)
+                    .addComponent(CloseButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceCodeLabel)
@@ -127,12 +140,37 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(19, 19, 19))
         );
 
+        CloseButton.getAccessibleContext().setAccessibleName("CloseButton");
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public  void clearTextAreas(){
+        ResultTextArea.setText("");
+        ByteCodeTextArea.setText("");
+        StackStatesTextArea.setText("");
+    }
+    
     private void CompileRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileRunButtonActionPerformed
-        JavaO.run();
+        clearTextAreas();
+        
+        Text.SourceCode = SourceCodeTextArea.getText().getBytes();
+        try{
+            JavaO.run();
+        }
+        catch(Exception e){
+            clearTextAreas();
+            ResultTextArea.setText(ErrorMessage.getMessage());
+        }
+
+        ResultTextArea.setText(VM.getResult()+'\n'+ErrorMessage.getMessage());
+        ByteCodeTextArea.setText(VM.getByteCode());
+        StackStatesTextArea.setText(VM.getStackStates());
     }//GEN-LAST:event_CompileRunButtonActionPerformed
+
+    private void CloseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseButtonActionPerformed
+        dispose();
+    }//GEN-LAST:event_CloseButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,6 +210,7 @@ public class MainFrame extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ByteCodeLabel;
     private javax.swing.JTextArea ByteCodeTextArea;
+    private javax.swing.JButton CloseButton;
     private javax.swing.JButton CompileRunButton;
     private javax.swing.JLabel ResultLabel;
     private javax.swing.JTextArea ResultTextArea;

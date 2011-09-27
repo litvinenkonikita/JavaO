@@ -12,7 +12,11 @@ import JavaO.Tables.Table;
         
 public class CodeGen {
     
-    static int PC = 0;
+    static int PC;
+    
+    static void init(){
+        PC = 0;
+    }
     
     static void Command(int Command){
         VM.Memory[PC++] = Command;
