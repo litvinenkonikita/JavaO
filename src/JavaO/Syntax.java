@@ -648,7 +648,7 @@ public class Syntax {
         Module();
         Table.closeScope();
         Table.closeScope();
-        VM.Result += "\nCompilation complete.";
+        VM.Result += "\nCompilation complete.\n";
     }
 
 }

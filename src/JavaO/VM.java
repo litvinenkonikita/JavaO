@@ -74,7 +74,113 @@ public class VM {
     private static String StackStates/* = new String()*/;
     
     public static String getByteCode(){
-        return ByteCode;
+        String ResByteCode = new String();
+        Integer Command = new Integer(0);
+        String CommandStr = new String();
+        int PC = 0;
+        while((Command = Memory[PC++]) != CommandStop){
+            if(Command >= 0){
+                CommandStr = Command.toString();
+            }
+            else{
+                switch(Command){
+                        case CommandAdd :
+                            CommandStr = "ADD";
+                            break;
+
+                        case CommandSub :
+                            CommandStr = "SUB";
+                            break;
+
+                        case CommandMult :
+                            CommandStr = "MULT";
+                            break;
+
+                        case CommandDiv :
+                            CommandStr = "DIV";
+                            break;
+
+                        case CommandMod :
+                            CommandStr = "MOD";
+                            break;
+
+                        case CommandNeg :
+                            CommandStr = "NEG";
+                            break;
+
+                        case CommandLoad :
+                            CommandStr = "LOAD";
+                            break;
+
+                        case CommandSave :
+                            CommandStr = "SAVE";
+                            break;
+
+                        case CommandDup :
+                            CommandStr = "DUP";
+                            break;
+
+                        case CommandDrop :
+                            CommandStr = "DROP";
+                            break;
+
+                        case CommandSwap :
+                            CommandStr = "SWAP";
+                            break;
+
+                        case CommandOver :
+                            CommandStr = "OVER";
+                            break;
+
+                        case CommandGoTo :
+                            CommandStr = "GOTO";
+                            break;
+
+                        case CommandIfEq :
+                            CommandStr = "IFEQ";
+                            break;
+
+                        case CommandIfNotEq :
+                            CommandStr = "IFNE";
+                            break;
+
+                        case CommandIfLessEq :
+                            CommandStr = "IFLE";
+                            break;
+
+                        case CommandIfLessThan :
+                            CommandStr = "IFLT";
+                            break;
+
+                        case CommandIfGreaterEq :
+                            CommandStr = "IFGE";
+                            break;
+
+                        case CommandIfGreaterThan :
+                            CommandStr = "IFGT";
+                            break;
+
+                        case CommandOutput :
+                            CommandStr = "OUTPUT";
+                            break;
+
+                        case CommandOutLn :
+                            CommandStr = "OUTLN";
+                            break;
+
+                        case CommandStop :
+                            CommandStr = "STOP";
+                            break;
+//
+//                        default :
+//                            Result += "\nInvalid operation code.";
+//                            break;
+                    }
+            }
+            ResByteCode += CommandStr + '\n';
+        }
+        ResByteCode += "STOP";
+        return ResByteCode;
     }
     
     public static String getResult(){
@@ -93,6 +199,7 @@ public class VM {
     }
     
     static void run(){
+        Result = "";
         int PC = 0;
         int SP = MemorySize;
         Integer Command = new Integer(0);
@@ -273,19 +380,17 @@ public class VM {
                 if(Command < 0){
                     StackStates += "command: " + CommandStr + "\n----------\n";
                 }
-                
                 for(int i = SP; i < MemorySize; i++){
                     StackStates += Memory[i] + "\n";
                 }
                 StackStates += "\n==========\n\n";
-                
             }
             ByteCode += "STOP";
             Result += '\n';
             if(SP < MemorySize){
                 Result += "Return code: " + Memory[SP] + "\n\n";
             }
-
+            //System.out.println("\nVM_RUN\nVM_RUN\nVM_RUN\nVM_RUN\n");
     }
             
 }

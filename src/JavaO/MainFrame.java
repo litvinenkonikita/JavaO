@@ -15,6 +15,12 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         initComponents();
         setResizable(false);
+        RunButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RunButtonActionPerformed(evt);
+            }
+        });
+        Compiled = false;
     }
 
     /** This method is called from within the constructor to
@@ -32,7 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
         ResultTextArea = new javax.swing.JTextArea();
         SourceCodeLabel = new javax.swing.JLabel();
         ResultLabel = new javax.swing.JLabel();
-        CompileRunButton = new javax.swing.JButton();
+        CompileButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         ByteCodeTextArea = new javax.swing.JTextArea();
         ByteCodeLabel = new javax.swing.JLabel();
@@ -40,6 +46,7 @@ public class MainFrame extends javax.swing.JFrame {
         StackStatesTextArea = new javax.swing.JTextArea();
         StackStatesLabel = new javax.swing.JLabel();
         CloseButton = new javax.swing.JButton();
+        RunButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -56,10 +63,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         ResultLabel.setText("Результат");
 
-        CompileRunButton.setText("Компиляция и исполнение");
-        CompileRunButton.addActionListener(new java.awt.event.ActionListener() {
+        CompileButton.setText("Компиляция");
+        CompileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CompileRunButtonActionPerformed(evt);
+                CompileButtonActionPerformed(evt);
             }
         });
 
@@ -84,6 +91,8 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        RunButton.setText("Исполнение");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -92,18 +101,24 @@ public class MainFrame extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(ResultLabel)
+                                .addGap(278, 278, 278))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(SourceCodeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 227, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)))
                         .addGap(18, 18, 18))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(ResultLabel)
-                        .addGap(278, 278, 278))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(SourceCodeLabel)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(CompileRunButton, javax.swing.GroupLayout.Alignment.TRAILING)))
-                .addGap(18, 18, 18)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(CompileButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(RunButton)
+                        .addGap(17, 17, 17)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -120,8 +135,9 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CompileRunButton)
-                    .addComponent(CloseButton))
+                    .addComponent(CloseButton)
+                    .addComponent(RunButton)
+                    .addComponent(CompileButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceCodeLabel)
@@ -151,23 +167,45 @@ public class MainFrame extends javax.swing.JFrame {
         StackStatesTextArea.setText("");
     }
     
-    private void CompileRunButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileRunButtonActionPerformed
+    private void CompileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileButtonActionPerformed
         clearTextAreas();
         
         Text.SourceCode = SourceCodeTextArea.getText().getBytes();
         try{
-            JavaO.run();
+            //JavaO.run();
+            JavaO.compile();
+            ResultTextArea.setText(VM.getResult());
+            ByteCodeTextArea.setText(VM.getByteCode());
+            Compiled = true;
         }
         catch(Exception e){
             clearTextAreas();
             ResultTextArea.setText(ErrorMessage.getMessage());
+            Compiled = false;
         }
 
-        ResultTextArea.setText(VM.getResult()+'\n'+ErrorMessage.getMessage());
-        ByteCodeTextArea.setText(VM.getByteCode());
-        StackStatesTextArea.setText(VM.getStackStates());
-    }//GEN-LAST:event_CompileRunButtonActionPerformed
+        //ResultTextArea.setText(VM.getResult()+'\n'+ErrorMessage.getMessage());
+        //ByteCodeTextArea.setText(VM.getByteCode());
+        //StackStatesTextArea.setText(VM.getStackStates());
+        //Compiled = true;
+    }//GEN-LAST:event_CompileButtonActionPerformed
 
+    private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
+        //System.out.println(Compiled);
+        if(Compiled){
+            //ResultTextArea.setText("");
+            JavaO.run();
+            StackStatesTextArea.setText(VM.getStackStates());
+            //System.out.println(VM.getStackStates() + "\n----------------------\n");
+            //System.out.println(VM.getStackStates().length());
+            ResultTextArea.setText(VM.getResult());
+            //System.out.println(VM.getResult()+"!");
+        }
+        else{
+            ResultTextArea.setText("Byte code not found!");
+        }
+    }
+    
     private void CloseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CloseButtonActionPerformed
         dispose();
     }//GEN-LAST:event_CloseButtonActionPerformed
@@ -207,13 +245,17 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
     }
+    
+    private boolean Compiled;
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ByteCodeLabel;
     private javax.swing.JTextArea ByteCodeTextArea;
     private javax.swing.JButton CloseButton;
-    private javax.swing.JButton CompileRunButton;
+    private javax.swing.JButton CompileButton;
     private javax.swing.JLabel ResultLabel;
     private javax.swing.JTextArea ResultTextArea;
+    private javax.swing.JButton RunButton;
     private javax.swing.JLabel SourceCodeLabel;
     private javax.swing.JTextArea SourceCodeTextArea;
     private javax.swing.JLabel StackStatesLabel;

@@ -20,13 +20,18 @@ public class JavaO {
         CodeGen.init();
         VM.init();
     }
-
-    public static void run() throws Exception {
+    
+    public static void compile() throws Exception{
         init();
         Syntax.compile();
-        if(ErrorMessage.getOk()){
-            VM.run();
-        }
+    }
+
+    public static void run()/* throws Exception */{
+        //init();
+        //Syntax.compile();
+        //if(ErrorMessage.getOk()){
+        VM.run();
+        //}
     }
     
 }
