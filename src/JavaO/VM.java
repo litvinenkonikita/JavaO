@@ -195,10 +195,11 @@ public class VM {
         Memory = new int[MemorySize];
         ByteCode = new String();
         Result = new String();
-        StackStates = new String();
+        //StackStates = new String();
     }
     
     static void run(){
+        StackStates = new String();
         Result = "";
         int PC = 0;
         int SP = MemorySize;
