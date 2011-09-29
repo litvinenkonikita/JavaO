@@ -191,15 +191,10 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_CompileButtonActionPerformed
 
     private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
-        //System.out.println(Compiled);
         if(Compiled){
-            //ResultTextArea.setText("");
             JavaO.run();
             StackStatesTextArea.setText(VM.getStackStates());
-            //System.out.println(VM.getStackStates() + "\n----------------------\n");
-            //System.out.println(VM.getStackStates().length());
             ResultTextArea.setText(VM.getResult());
-            //System.out.println(VM.getResult()+"!");
         }
         else{
             ResultTextArea.setText("Byte code not found!");

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import JavaO.ErrorMessage;
 
+
 public class Table {
     
     public static final int CategoryConst = 1,
