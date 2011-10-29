@@ -13,10 +13,6 @@ import java.io.InputStream;
 public class Text {
     
     static final int TabSize = 3;
-    //static final char CharSpace = ' ';
-    //static final char CharTab = '\t';
-    //static final char CharEOL = '\n';
-    //static final char CharEOT = '\0';
     static final int CharSpace = ' ';// 32
     static final int CharTab = '\t';//  9
     static final int CharEOL = '\n';//  10
@@ -59,9 +55,9 @@ public class Text {
     
     
     static void reset(){
-                Location.Pos = 0;
-                Location.Line = 1;
-                CurrentCharIndex = -1;
-                NextChar();
+        Location.Pos = 0;
+        Location.Line = 1;
+        CurrentCharIndex = -1;
+        NextChar();
     }
 }

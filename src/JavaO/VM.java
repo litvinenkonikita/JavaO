@@ -264,7 +264,7 @@ public class VM {
 
                         case CommandDup :
                             SP--;
-                            Memory[SP+1] = Memory[SP];
+                            Memory[SP] = Memory[SP+1];
                             CommandStr = "DUP";
                             break;
 

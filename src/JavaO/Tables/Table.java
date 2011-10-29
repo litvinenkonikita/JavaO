@@ -22,7 +22,6 @@ public class Table {
                     TypeBool = 1,
                     TypeNone = 2;
     
-    //public static ArrayList NamesTable = new ArrayList<TableItem>();
     public static ArrayList NamesTable;
     
     /*private*/ static int Top, Bottom, Current;
@@ -41,7 +40,6 @@ public class Table {
         Item.Type = Type;
         Item.Val = Value;
         Top++;
-        //NamesTable.add(Top, Item);
         NamesTable.add(Item);
     }
     
@@ -55,10 +53,8 @@ public class Table {
     public static void closeScope(){
         while(((TableItem)NamesTable.get(Top)).Category != CategoryGuard){
             NamesTable.remove(Top--);
-            //Top--;
         }
         NamesTable.remove(Top--);
-        //Top--;
         Bottom = Top;
     }
     
@@ -75,7 +71,6 @@ public class Table {
             Item.Type = TypeInt;
             Item.Val = 0;
             Top++;
-            //NamesTable.add(Top, Item);
             NamesTable.add(Item);
         }
         else{

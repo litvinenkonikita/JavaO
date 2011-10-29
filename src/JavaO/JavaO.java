@@ -12,9 +12,6 @@ public class JavaO {
     
     static void init() throws Exception {
         Text.reset();
-        //if(!Text.Ok){
-            //ErrorMessage.Error(Text.Message);
-        //}
         Table.init();
         Lexer.init();
         CodeGen.init();
