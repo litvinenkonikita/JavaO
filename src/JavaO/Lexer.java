@@ -39,7 +39,6 @@ public class Lexer {
         int Lex;
     }
     
-    //private static Item[] KeywordsTable = new Item[KeywordsNum];
     private static Item[] KeywordsTable;
 
     private static void enterKeyword(String LexName , int LexType){
@@ -228,9 +227,6 @@ public class Lexer {
                     break;
                     
                 case Text.CharEOT :
-//                    if(FirstEOT){
-//                        FirstEOT = false;
-//                    }
                     CurrentLex = LexEOT;
                     break;
                     
