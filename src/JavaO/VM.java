@@ -5,11 +5,8 @@ package JavaO;
  * @author nikita
  */
 
-//import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.InputStreamReader;
-//import java.io.FileWriter;
-//import java.io.BufferedWriter;
 
 public class VM {
     
@@ -43,8 +40,6 @@ public class VM {
                         CommandOutput = -22,
                         CommandOutLn = -23;
     
-    
-    //static int Memory[] = new int[MemorySize];
     static int Memory[];
     
 //    static void readln(){
@@ -67,11 +62,10 @@ public class VM {
 //        return (int)input.nval;
 //    }
     
-//    private static BufferedWriter Output;
-    
-    private static String ByteCode/* = new String()*/;
-    static String Result/* = new String()*/;
-    private static String StackStates/* = new String()*/;
+  
+    private static String ByteCode;
+    static String Result;
+    private static String StackStates;
     
     public static String getByteCode(){
         String ResByteCode = new String();
@@ -195,7 +189,6 @@ public class VM {
         Memory = new int[MemorySize];
         ByteCode = new String();
         Result = new String();
-        //StackStates = new String();
     }
     
     static void run(){
@@ -206,10 +199,7 @@ public class VM {
         Integer Command = new Integer(0);
         int Buffer;
         String CommandStr = new String();
-//        try{
-            
-//            Output = new BufferedWriter(new FileWriter("Output.txt"));
-        
+
             while((Command = Memory[PC++]) != CommandStop){
                 if(Command >= 0){
                     Memory[--SP] = Command;
@@ -352,14 +342,12 @@ public class VM {
                                 //System.out.print(" ");
                                 Result += " ";
                             }
-                            //System.out.print(Memory[SP+1]);
                             Result += Memory[SP+1];
                             SP += 2;
                             CommandStr = "OUTPUT";
                             break;
 
                         case CommandOutLn :
-                            //System.out.println();
                             Result += '\n';
                             CommandStr = "OUTLN";
                             break;

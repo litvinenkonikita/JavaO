@@ -5,7 +5,6 @@ package JavaO;
  * @author Nikita
  */
 
-//import java.util.Iterator;
 
 import JavaO.Tables.TableItem;
 import JavaO.Tables.Table;

@@ -282,7 +282,6 @@ public class Syntax {
         }
         else{
             Type = Term();
-            //System.out.println(Lexer.CurrentLex + " " + Lexer.CurrentName);
         }
         if(Lexer.CurrentLex == Lexer.LexPlus ||
                 Lexer.CurrentLex == Lexer.LexMinus){
@@ -357,7 +356,6 @@ public class Syntax {
     
     //
     static void StandardProcedure(int StProc) throws Exception {
-        //System.out.println(StProc + " " + StProcOutInt);
         switch(StProc){
             case StProcDEC :
                 Variable();
@@ -443,7 +441,6 @@ public class Syntax {
     static void CallStatement(int StProc) throws Exception {
         checkLex(Lexer.LexName, "procedure name");
         if(Lexer.CurrentLex == Lexer.LexLeftPar){
-            //System.out.println(Lexer.CurrentLex);
             Lexer.NextLex();
             StandardProcedure(StProc);
             checkLex(Lexer.LexRightPar, "\")\"");
@@ -521,7 +518,6 @@ public class Syntax {
                         Item.Name.length()+Lexer.CurrentName.length() <= Lexer.NameLen){
                     
                     Item = Table.findName(Item.Name+"."+Lexer.CurrentName);
-                    //System.out.println(Item.Name);
                 }
                 else{
                     ErrorMessage.Expected("Name from module " + Item.Name);
@@ -598,7 +594,6 @@ public class Syntax {
     static void Module() throws Exception {
         TableItem ModItem;
         checkLex(Lexer.LexModule, "MODULE");
-        //System.out.println("!");
         if(Lexer.CurrentLex != Lexer.LexName){
             ErrorMessage.Expected("Module name");
         }
@@ -614,9 +609,7 @@ public class Syntax {
             StatementSequence();
         }
         checkLex(Lexer.LexEnd, "END");
-        //Lexer.NextLex();
         if(Lexer.CurrentLex != Lexer.LexName){
-            //System.out.println(Lexer.CurrentLex + " " + Lexer.CurrentName);
             ErrorMessage.Expected("Module name");
         }
         else if(Lexer.CurrentName.compareTo(ModItem.Name) != 0){
@@ -644,7 +637,6 @@ public class Syntax {
         Table.enterName("INC", Table.CategoryStProc, Table.TypeNone, StProcINC);
         Table.enterName("INTEGER", Table.CategoryType, Table.TypeInt, 0);
         Table.openScope();
-        //System.out.println("\nCompilation complete.");
         Module();
         Table.closeScope();
         Table.closeScope();
