@@ -6,8 +6,6 @@ package JavaO;
  */
 
 import java.io.InputStream;
-//import java.io.IOException;
-//import java.io.FileInputStream;
         
         
 public class Text {
@@ -27,12 +25,9 @@ public class Text {
     static int CurrentChar = CharEOT;
     static int CurrentCharIndex = -1;
     static byte[] SourceCode;
-    
-//    private static InputStream InputFile;
-    
+
     
     static void NextChar(){
-        //try{
             if(SourceCode.length <= CurrentCharIndex+1){
                 CurrentChar = CharEOT;
             }
@@ -53,8 +48,6 @@ public class Text {
                     while(++Location.Pos % TabSize != 0){}
                 }
             }
-        //}
-        //catch(IOException e){};
     }
     
     

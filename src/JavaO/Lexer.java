@@ -5,9 +5,6 @@ package JavaO;
  * @author nikita
  */
 
-
-//import java.lang.StringBuffer;
-
 public class Lexer {
     
     static int NameLen = 31;    // max name length
@@ -39,7 +36,6 @@ public class Lexer {
         int Lex;
     }
     
-    //private static Item[] KeywordsTable = new Item[KeywordsNum];
     private static Item[] KeywordsTable;
 
     private static void enterKeyword(String LexName , int LexType){
@@ -94,15 +90,7 @@ public class Lexer {
         Text.NextChar();
         do{
             while(Text.CurrentChar != '*' && Text.CurrentChar != Text.CharEOT){
-                /*if(Text.CurrentChar == '('){
-                    Text.NextChar();
-                    if(Text.CurrentChar == '*'){
-                        Comment();
-                    }
-                }
-                else{*/
-                    Text.NextChar();
-                //}
+                Text.NextChar();
             }
             
             if(Text.CurrentChar == '*'){

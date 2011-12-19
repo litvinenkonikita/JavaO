@@ -26,7 +26,6 @@ public class ErrorMessage {
     }
     
     public static void Warning(String Msg){
-        //System.out.println("\nWarning : " + Msg);
         Message = "\nWarning : " + Msg;
     }
     

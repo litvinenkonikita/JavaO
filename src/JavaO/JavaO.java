@@ -27,11 +27,7 @@ public class JavaO {
     }
 
     public static void run()/* throws Exception */{
-        //init();
-        //Syntax.compile();
-        //if(ErrorMessage.getOk()){
         VM.run();
-        //}
     }
     
 }

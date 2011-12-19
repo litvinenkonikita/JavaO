@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import JavaO.ErrorMessage;
 
+
 public class Table {
     
     public static final int CategoryConst = 1,
@@ -22,7 +23,6 @@ public class Table {
                     TypeBool = 1,
                     TypeNone = 2;
     
-    //public static ArrayList NamesTable = new ArrayList<TableItem>();
     public static ArrayList NamesTable;
     
     /*private*/ static int Top, Bottom, Current;
@@ -75,7 +75,6 @@ public class Table {
             Item.Type = TypeInt;
             Item.Val = 0;
             Top++;
-            //NamesTable.add(Top, Item);
             NamesTable.add(Item);
         }
         else{
