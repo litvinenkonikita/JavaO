@@ -7,6 +7,8 @@ package JavaO;
 
 import java.io.StreamTokenizer;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+
 
 public class VM {
     
@@ -41,7 +43,6 @@ public class VM {
                         CommandOutLn = -23;
     
     static int Memory[];
-    
 //    static void readln(){
 //        try{
 //            while(System.in.read() !=  '\n');
@@ -65,18 +66,43 @@ public class VM {
   
     private static String ByteCode;
     static String Result;
-    private static String StackStates;
+    private static java.util.HashMap<Integer, String> VariablesMap;
+    //private static String StackStates;
     
-    public static String getByteCode(){
-        String ResByteCode = new String();
+    static int getByteCodeCount(){
+        int Length = 0;
+        while((Memory[Length++]) != CommandStop);
+        return Length;
+    }
+    
+    public static void addVariable(int Address, String VarName){
+        VariablesMap.put(Address, VarName);
+    }
+    
+    public static java.util.Vector getByteCode(){
+        java.util.Vector ResultByteCodeVector = new java.util.Vector();
+        java.util.Vector Row;
         Integer Command = new Integer(0);
         String CommandStr = new String();
+        String CommandDesc = new String();
         int PC = 0;
         while((Command = Memory[PC++]) != CommandStop){
             if(Command >= 0){
                 CommandStr = Command.toString();
+                if(VariablesMap.containsKey(PC)){
+                    CommandDesc = "variable "+VariablesMap.get(PC);
+                }
+                else{
+                    if(PC == getByteCodeCount()-1){
+                        CommandDesc = "return code";
+                    }
+                    else{
+                        CommandDesc = "const";
+                    }
+                }
             }
             else{
+                CommandDesc = "Command";
                 switch(Command){
                         case CommandAdd :
                             CommandStr = "ADD";
@@ -171,28 +197,32 @@ public class VM {
 //                            break;
                     }
             }
-            ResByteCode += CommandStr + '\n';
+            Row = new java.util.Vector(Arrays.asList(PC-1, CommandStr, CommandDesc));
+            ResultByteCodeVector.add(Row);
         }
-        ResByteCode += "STOP";
-        return ResByteCode;
+        Row = new java.util.Vector(Arrays.asList(PC-1, "STOP", "Command"));
+        ResultByteCodeVector.add(Row);
+        return ResultByteCodeVector;
     }
     
     public static String getResult(){
         return Result;
     }
     
-    public static String getStackStates(){
-        return StackStates;
-    }
+//    public static String getStackStates(){
+//        return StackStates;
+//    }
     
     static void init(){
         Memory = new int[MemorySize];
-        ByteCode = new String();
+        //ByteCode = new String();
         Result = new String();
+        
+        VariablesMap = new java.util.HashMap<Integer, String>();
     }
     
     static void run(){
-        StackStates = new String();
+        //StackStates = new String();
         Result = "";
         int PC = 0;
         int SP = MemorySize;
@@ -364,17 +394,17 @@ public class VM {
                 if(Command >= 0){
                     CommandStr = Command.toString();
                 }
-                ByteCode += CommandStr + '\n';
+                //ByteCode += CommandStr + '\n';
                 
-                if(Command < 0){
-                    StackStates += "command: " + CommandStr + "\n----------\n";
-                }
-                for(int i = SP; i < MemorySize; i++){
-                    StackStates += Memory[i] + "\n";
-                }
-                StackStates += "\n==========\n\n";
+//                if(Command < 0){
+//                    StackStates += "command: " + CommandStr + "\n----------\n";
+//                }
+//                for(int i = SP; i < MemorySize; i++){
+//                    StackStates += Memory[i] + "\n";
+//                }
+//                StackStates += "\n==========\n\n";
             }
-            ByteCode += "STOP";
+            //ByteCode += "STOP";
             Result += '\n';
             if(SP < MemorySize){
                 Result += "Return code: " + Memory[SP] + "\n\n";
