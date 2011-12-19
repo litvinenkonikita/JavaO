@@ -190,6 +190,7 @@ public class Syntax {
             Item = Table.findName(Lexer.CurrentName);
             if(Item.Category == Table.CategoryVar){
                 CodeGen.Address(Item);
+                VM.addVariable(CodeGen.PC, Item.Name);
                 CodeGen.Command(VM.CommandLoad);
                 Lexer.NextLex();
                 return Item.Type;
@@ -349,6 +350,7 @@ public class Syntax {
                 ErrorMessage.Expected("Variable name");
             }
             CodeGen.Address(VarItem);
+            VM.addVariable(CodeGen.PC, VarItem.Name);
             Lexer.NextLex();
         }
     }
@@ -384,7 +386,7 @@ public class Syntax {
                     CodeGen.Command(1);
                 }
                 CodeGen.Command(VM.CommandAdd);
-                CodeGen.Command(VM.CommandStop);
+                CodeGen.Command(VM.CommandSave);
                 return;
                 
             case StProcInOpen :

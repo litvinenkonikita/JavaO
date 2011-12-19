@@ -13,6 +13,7 @@ package JavaO;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
+import java.util.Arrays;
 import javax.swing.JFileChooser;
 
 public class MainFrame extends javax.swing.JFrame {
@@ -32,8 +33,26 @@ public class MainFrame extends javax.swing.JFrame {
         textFileChooserFilter = new TextFileChooserFilter();
         aboutFrame = new AboutFrame();
         helpContentsFrame = new HelpContentsFrame();
-        
+
         fileChooser.setFileFilter(textFileChooserFilter);
+        
+        
+        ByteCodeTableModel = new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns){
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
+
+        ByteCodeTable.setModel(ByteCodeTableModel);
+        ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
+        
+        StackStatesTableModel = new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns);
+        StackStatesTable.setModel(StackStatesTableModel);
+        StackStatesTable.getColumnModel().getColumn(0).setPreferredWidth(25);
+        
+        columnModel = new javax.swing.table.DefaultTableColumnModel();
+        ByteCodeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        
     }
 
     /** This method is called from within the constructor to
@@ -53,13 +72,13 @@ public class MainFrame extends javax.swing.JFrame {
         SourceCodeLabel = new javax.swing.JLabel();
         ResultLabel = new javax.swing.JLabel();
         CompileButton = new javax.swing.JButton();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        ByteCodeTextArea = new javax.swing.JTextArea();
         ByteCodeLabel = new javax.swing.JLabel();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        StackStatesTextArea = new javax.swing.JTextArea();
         StackStatesLabel = new javax.swing.JLabel();
         RunButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ByteCodeTable = new javax.swing.JTable();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        StackStatesTable = new javax.swing.JTable();
         MenuBar = new javax.swing.JMenuBar();
         FileMenuItem = new javax.swing.JMenu();
         MenuItemOpenFile = new javax.swing.JMenuItem();
@@ -99,21 +118,37 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        ByteCodeTextArea.setColumns(20);
-        ByteCodeTextArea.setEditable(false);
-        ByteCodeTextArea.setRows(5);
-        jScrollPane3.setViewportView(ByteCodeTextArea);
-
         ByteCodeLabel.setText("Byte-code");
-
-        StackStatesTextArea.setColumns(20);
-        StackStatesTextArea.setEditable(false);
-        StackStatesTextArea.setRows(5);
-        jScrollPane4.setViewportView(StackStatesTextArea);
 
         StackStatesLabel.setText("Stack states");
 
         RunButton.setText("   Run   ");
+
+        ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane3.setViewportView(ByteCodeTable);
+
+        StackStatesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane4.setViewportView(StackStatesTable);
 
         FileMenuItem.setText("File");
 
@@ -208,22 +243,22 @@ public class MainFrame extends javax.swing.JFrame {
                             .addGap(122, 122, 122))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(ResultLabel))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(39, 39, 39)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(ByteCodeLabel)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(StackStatesLabel)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ByteCodeLabel))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(StackStatesLabel)
+                        .addGap(152, 152, 152))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 225, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -233,18 +268,18 @@ public class MainFrame extends javax.swing.JFrame {
                         .addGap(48, 48, 48)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(SourceCodeLabel)
-                            .addComponent(ByteCodeLabel)
-                            .addComponent(StackStatesLabel))))
+                            .addComponent(StackStatesLabel)
+                            .addComponent(ByteCodeLabel))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 286, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ResultLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -253,8 +288,10 @@ public class MainFrame extends javax.swing.JFrame {
 
     public  void clearTextAreas(){
         ResultTextArea.setText("");
-        ByteCodeTextArea.setText("");
-        StackStatesTextArea.setText("");
+        ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns));
+        ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
+        StackStatesTable.setModel(new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns));
+        //StackStatesTextArea.setText("");
     }
     
     private void CompileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileButtonActionPerformed
@@ -262,10 +299,11 @@ public class MainFrame extends javax.swing.JFrame {
         
         Text.SourceCode = SourceCodeTextArea.getText().getBytes();
         try{
-            //JavaO.run();
             JavaO.compile();
             ResultTextArea.setText(VM.getResult());
-            ByteCodeTextArea.setText(VM.getByteCode());
+            ByteCodeTableModel.setDataVector(VM.getByteCode(), new java.util.Vector(Arrays.asList(ByteCodeTableColumns)));
+            ByteCodeTable.setModel(ByteCodeTableModel);
+            ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
             Compiled = true;
         }
         catch(Exception e){
@@ -273,17 +311,12 @@ public class MainFrame extends javax.swing.JFrame {
             ResultTextArea.setText(ErrorMessage.getMessage());
             Compiled = false;
         }
-
-        //ResultTextArea.setText(VM.getResult()+'\n'+ErrorMessage.getMessage());
-        //ByteCodeTextArea.setText(VM.getByteCode());
-        //StackStatesTextArea.setText(VM.getStackStates());
-        //Compiled = true;
     }//GEN-LAST:event_CompileButtonActionPerformed
 
     private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
         if(Compiled){
             JavaO.run();
-            StackStatesTextArea.setText(VM.getStackStates());
+            //StackStatesTextArea.setText(VM.getStackStates());
             ResultTextArea.setText(VM.getResult());
         }
         else{
@@ -299,11 +332,13 @@ public class MainFrame extends javax.swing.JFrame {
                 SourceCodeTextArea.read( new FileReader( file.getAbsolutePath() ), null );
             }
             catch(IOException ex) {
-                System.out.println("problem accessing file"+file.getAbsolutePath());
+                //System.out.println("problem accessing file "+file.getAbsolutePath());
+                ResultTextArea.setText("problem accessing file "+file.getAbsolutePath());
             }
         }
         else{
-            System.out.println("File access cancelled by user.");
+            //System.out.println("File access cancelled by user.");
+            ResultTextArea.setText("File access cancelled by user.");
         }
     }//GEN-LAST:event_MenuItemOpenFileActionPerformed
 
@@ -373,9 +408,22 @@ public class MainFrame extends javax.swing.JFrame {
     private HelpContentsFrame helpContentsFrame;
     private TextFileChooserFilter textFileChooserFilter;
     
+    javax.swing.table.DefaultTableModel ByteCodeTableModel;
+    javax.swing.table.DefaultTableModel StackStatesTableModel;
+    javax.swing.DefaultListSelectionModel selectionModel;
+    javax.swing.table.DefaultTableColumnModel columnModel;
+    
+    javax.swing.table.TableColumn NumberColumn;
+    javax.swing.table.TableColumn CodeColumn;
+    javax.swing.table.TableColumn DescColumn;
+    
+    String ByteCodeTableColumns[] = {"Address", "Code", "Description"};
+    String StackStatesTableColumns[] = {"Operands"};
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ByteCodeLabel;
-    private javax.swing.JTextArea ByteCodeTextArea;
+    private javax.swing.JTable ByteCodeTable;
     private javax.swing.JButton CompileButton;
     private javax.swing.JMenu FileMenuItem;
     private javax.swing.JMenuBar MenuBar;
@@ -396,7 +444,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel SourceCodeLabel;
     private javax.swing.JTextArea SourceCodeTextArea;
     private javax.swing.JLabel StackStatesLabel;
-    private javax.swing.JTextArea StackStatesTextArea;
+    private javax.swing.JTable StackStatesTable;
     private javax.swing.JFileChooser fileChooser;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
