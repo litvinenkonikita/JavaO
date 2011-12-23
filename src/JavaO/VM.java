@@ -284,7 +284,7 @@ public class VM {
 
                         case CommandDup :
                             SP--;
-                            Memory[SP+1] = Memory[SP];
+                            Memory[SP] = Memory[SP+1];
                             CommandStr = "DUP";
                             break;
 
@@ -394,7 +394,6 @@ public class VM {
                 if(Command >= 0){
                     CommandStr = Command.toString();
                 }
-                //ByteCode += CommandStr + '\n';
                 
 //                if(Command < 0){
 //                    StackStates += "command: " + CommandStr + "\n----------\n";
@@ -404,7 +403,6 @@ public class VM {
 //                }
 //                StackStates += "\n==========\n\n";
             }
-            //ByteCode += "STOP";
             Result += '\n';
             if(SP < MemorySize){
                 Result += "Return code: " + Memory[SP] + "\n\n";
