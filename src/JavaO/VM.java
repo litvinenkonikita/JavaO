@@ -67,7 +67,7 @@ public class VM {
     private static String ByteCode;
     static String Result;
     private static java.util.HashMap<Integer, String> VariablesMap;
-    //private static String StackStates;
+    private static java.util.Vector StackState;
     
     static int getByteCodeCount(){
         int Length = 0;
@@ -209,9 +209,9 @@ public class VM {
         return Result;
     }
     
-//    public static String getStackStates(){
-//        return StackStates;
-//    }
+    public static java.util.Vector getStackState(){
+        return StackState;
+    }
     
     static void init(){
         Memory = new int[MemorySize];
@@ -222,7 +222,8 @@ public class VM {
     }
     
     static void run(){
-        //StackStates = new String();
+        StackState = new java.util.Vector();
+        java.util.Vector Row;
         Result = "";
         int PC = 0;
         int SP = MemorySize;
@@ -402,7 +403,17 @@ public class VM {
 //                    StackStates += Memory[i] + "\n";
 //                }
 //                StackStates += "\n==========\n\n";
+                
+                
+                for(int i = SP; i < MemorySize; i++){
+                    Row = new java.util.Vector(Arrays.asList(Memory[i], null));
+                    StackState.add(Row);
+                }
+                
+                // Тут event
+
             }
+
             Result += '\n';
             if(SP < MemorySize){
                 Result += "Return code: " + Memory[SP] + "\n\n";

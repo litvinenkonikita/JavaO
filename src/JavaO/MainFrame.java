@@ -36,22 +36,23 @@ public class MainFrame extends javax.swing.JFrame {
 
         fileChooser.setFileFilter(textFileChooserFilter);
         
-        
         ByteCodeTableModel = new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns){
             public boolean isCellEditable(int row, int column){
                 return false;
             }
         };
-
         ByteCodeTable.setModel(ByteCodeTableModel);
-        ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
         
-        StackStatesTableModel = new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns);
+        StackStatesTableModel = new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns){
+            public boolean isCellEditable(int row, int column){
+                return false;
+            }
+        };
         StackStatesTable.setModel(StackStatesTableModel);
-        StackStatesTable.getColumnModel().getColumn(0).setPreferredWidth(25);
         
-        columnModel = new javax.swing.table.DefaultTableColumnModel();
+        //columnModel = new javax.swing.table.DefaultTableColumnModel();
         ByteCodeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        StackStatesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         
     }
 
@@ -290,9 +291,7 @@ public class MainFrame extends javax.swing.JFrame {
     public  void clearTextAreas(){
         ResultTextArea.setText("");
         ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns));
-        ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
         StackStatesTable.setModel(new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns));
-        //StackStatesTextArea.setText("");
     }
     
     private void CompileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileButtonActionPerformed
@@ -304,7 +303,6 @@ public class MainFrame extends javax.swing.JFrame {
             ResultTextArea.setText(VM.getResult());
             ByteCodeTableModel.setDataVector(VM.getByteCode(), new java.util.Vector(Arrays.asList(ByteCodeTableColumns)));
             ByteCodeTable.setModel(ByteCodeTableModel);
-            ByteCodeTable.getColumnModel().getColumn(0).setPreferredWidth(25);
             Compiled = true;
         }
         catch(Exception e){
@@ -317,12 +315,20 @@ public class MainFrame extends javax.swing.JFrame {
     private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
         if(Compiled){
             JavaO.run();
-            //StackStatesTextArea.setText(VM.getStackStates());
+            
+            //StackStatesTableModel.setDataVector(VM.getStackState(), new java.util.Vector(Arrays.asList(StackStatesTableColumns)));
+            //StackStatesTable.setModel(StackStatesTableModel);
+            
             ResultTextArea.setText(VM.getResult());
         }
         else{
-            ResultTextArea.setText("Byte code not found!");
+            ResultTextArea.setText("Source code wasn't compiled!");
         }
+    }
+    
+    private void StackStateChangeActionPerformed(java.awt.event.ActionEvent evt){
+        //StackStatesTableModel.setDataVector(VM.getStackState(), new java.util.Vector(Arrays.asList(StackStatesTableColumns)));
+        //StackStatesTable.setModel(StackStatesTableModel);
     }
     
     private void MenuItemOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenFileActionPerformed
@@ -419,7 +425,7 @@ public class MainFrame extends javax.swing.JFrame {
     javax.swing.table.TableColumn DescColumn;
     
     String ByteCodeTableColumns[] = {"Address", "Code", "Description"};
-    String StackStatesTableColumns[] = {"Operands"};
+    String StackStatesTableColumns[] = {"Operands", "Command"};
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
