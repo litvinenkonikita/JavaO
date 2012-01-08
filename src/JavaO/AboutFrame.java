@@ -40,8 +40,9 @@ public class AboutFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("About");
 
+        AboutTextPane.setContentType("text/html");
         AboutTextPane.setEditable(false);
-        AboutTextPane.setText("JavaO is IDE for O programming language and VM emulator for O virtual machine.");
+        AboutTextPane.setText("<html>\n  <head>\n  </head>\n  <body>\n      \t<h3>jOVMEmulator 0.1</h3> is IDE for O programming language and VM emulator for O virtual machine. <br>\n\tFor more information and source code, please visit <a href=\"http://github.com/litvinenkonikita/JavaO/\">github.com/litvinenkonikita/JavaO/</a>.<br>\n  </body>\n</html>\n");
         jScrollPane1.setViewportView(AboutTextPane);
 
         CloseButton.setText("   Close   ");
@@ -58,19 +59,19 @@ public class AboutFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(161, 161, 161)
-                        .addComponent(CloseButton)))
+                        .addComponent(CloseButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 115, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addComponent(CloseButton)
                 .addContainerGap())
         );

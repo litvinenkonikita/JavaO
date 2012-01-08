@@ -13,10 +13,15 @@ package JavaO;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.util.Arrays;
+import java.util.Vector;
 import javax.swing.JFileChooser;
 
-public class MainFrame extends javax.swing.JFrame {
+
+
+public class MainFrame extends javax.swing.JFrame implements java.awt.event.ActionListener{
 
     /** Creates new form MainFrame */
     public MainFrame() {
@@ -27,15 +32,27 @@ public class MainFrame extends javax.swing.JFrame {
                 RunButtonActionPerformed(evt);
             }
         });
+        PauseButton.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ByteCodeTableTimer.stop();
+            }
+        });
         
         Compiled = false;
+        FileOpened = false;
         
-        textFileChooserFilter = new TextFileChooserFilter();
+        OpenFileChooserFilter = new TextFileChooserFilter();
+        //SaveAsFileChooserFilter = new TextFileChooserFilter();
+        
         aboutFrame = new AboutFrame();
         helpContentsFrame = new HelpContentsFrame();
 
-        fileChooser.setFileFilter(textFileChooserFilter);
-        
+        SaveAsFileChooser = new javax.swing.JFileChooser();
+        SaveAsFileChooser.setDialogTitle("Source code file");
+        SaveAsFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
+        OpenFileChooser.setFileFilter(OpenFileChooserFilter);
+
         ByteCodeTableModel = new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns){
             public boolean isCellEditable(int row, int column){
                 return false;
@@ -50,9 +67,10 @@ public class MainFrame extends javax.swing.JFrame {
         };
         StackStatesTable.setModel(StackStatesTableModel);
         
-        //columnModel = new javax.swing.table.DefaultTableColumnModel();
         ByteCodeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         StackStatesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        
+        StackStates = new Vector<Vector>();
         
     }
 
@@ -65,7 +83,7 @@ public class MainFrame extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        fileChooser = new javax.swing.JFileChooser();
+        OpenFileChooser = new javax.swing.JFileChooser();
         jScrollPane1 = new javax.swing.JScrollPane();
         SourceCodeTextArea = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -80,12 +98,15 @@ public class MainFrame extends javax.swing.JFrame {
         ByteCodeTable = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         StackStatesTable = new javax.swing.JTable();
+        PauseButton = new javax.swing.JButton();
+        InputLabel = new javax.swing.JLabel();
+        InputTextField = new javax.swing.JTextField();
         MenuBar = new javax.swing.JMenuBar();
         FileMenuItem = new javax.swing.JMenu();
         MenuItemOpenFile = new javax.swing.JMenuItem();
-        MenuItemNew = new javax.swing.JMenuItem();
         MenuItemSave = new javax.swing.JMenuItem();
         MenuItemSaveAs = new javax.swing.JMenuItem();
+        MenuItemClose = new javax.swing.JMenuItem();
         MenuItemExit = new javax.swing.JMenuItem();
         RunMenu = new javax.swing.JMenu();
         MenuItemCompile = new javax.swing.JMenuItem();
@@ -94,7 +115,7 @@ public class MainFrame extends javax.swing.JFrame {
         MenuItemHelpContents = new javax.swing.JMenuItem();
         MenuItemAbout = new javax.swing.JMenuItem();
 
-        fileChooser.setDialogTitle("Source code file");
+        OpenFileChooser.setDialogTitle("Source code file");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("JavaO");
@@ -151,6 +172,10 @@ public class MainFrame extends javax.swing.JFrame {
         ));
         jScrollPane4.setViewportView(StackStatesTable);
 
+        PauseButton.setText("Pause");
+
+        InputLabel.setText("Input");
+
         FileMenuItem.setText("File");
 
         MenuItemOpenFile.setText("Open File ...");
@@ -161,19 +186,29 @@ public class MainFrame extends javax.swing.JFrame {
         });
         FileMenuItem.add(MenuItemOpenFile);
 
-        MenuItemNew.setText("New");
-        MenuItemNew.addActionListener(new java.awt.event.ActionListener() {
+        MenuItemSave.setText("Save");
+        MenuItemSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MenuItemNewActionPerformed(evt);
+                MenuItemSaveActionPerformed(evt);
             }
         });
-        FileMenuItem.add(MenuItemNew);
-
-        MenuItemSave.setText("Save");
         FileMenuItem.add(MenuItemSave);
 
         MenuItemSaveAs.setText("Save as ...");
+        MenuItemSaveAs.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemSaveAsActionPerformed(evt);
+            }
+        });
         FileMenuItem.add(MenuItemSaveAs);
+
+        MenuItemClose.setText("Close and clear");
+        MenuItemClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuItemCloseActionPerformed(evt);
+            }
+        });
+        FileMenuItem.add(MenuItemClose);
 
         MenuItemExit.setText("Exit");
         MenuItemExit.addActionListener(new java.awt.event.ActionListener() {
@@ -236,24 +271,25 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(SourceCodeLabel)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(ResultLabel)
+                        .addGap(261, 261, 261))
+                    .addComponent(InputLabel)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(InputTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(ResultLabel)
-                                .addGap(261, 261, 261))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
-                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 247, Short.MAX_VALUE)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(CompileButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(RunButton)))
-                                .addGap(44, 44, 44)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                                .addComponent(CompileButton)
+                                .addGap(18, 18, 18)
+                                .addComponent(RunButton)))
+                        .addGap(44, 44, 44)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ByteCodeLabel)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(PauseButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(ByteCodeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -266,7 +302,8 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(CompileButton)
-                    .addComponent(RunButton))
+                    .addComponent(RunButton)
+                    .addComponent(PauseButton))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceCodeLabel)
@@ -274,11 +311,15 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(StackStatesLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE)
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(30, 30, 30)
+                        .addComponent(InputLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(InputTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 19, Short.MAX_VALUE)
                         .addComponent(ResultLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -288,7 +329,7 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    public  void clearTextAreas(){
+    public void clearTextAreas(){
         ResultTextArea.setText("");
         ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns));
         StackStatesTable.setModel(new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns));
@@ -301,7 +342,7 @@ public class MainFrame extends javax.swing.JFrame {
         try{
             JavaO.compile();
             ResultTextArea.setText(VM.getResult());
-            ByteCodeTableModel.setDataVector(VM.getByteCode(), new java.util.Vector(Arrays.asList(ByteCodeTableColumns)));
+            ByteCodeTableModel.setDataVector(VM.getByteCode(), new Vector(Arrays.asList(ByteCodeTableColumns)));
             ByteCodeTable.setModel(ByteCodeTableModel);
             Compiled = true;
         }
@@ -313,28 +354,54 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_CompileButtonActionPerformed
 
     private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
-        if(Compiled){
-            JavaO.run();
-            
-            //StackStatesTableModel.setDataVector(VM.getStackState(), new java.util.Vector(Arrays.asList(StackStatesTableColumns)));
-            //StackStatesTable.setModel(StackStatesTableModel);
-            
-            ResultTextArea.setText(VM.getResult());
+        ResultTextArea.setText("");
+        try{    
+            if(Compiled){
+                JavaO.run();
+                StackStates = VM.getStackStates();
+                ResultTextArea.setText(VM.getResult());
+                int ByteCodeRowCount = ByteCodeTable.getRowCount();
+                ByteCodeTableTimer.start();
+            }
+            else{
+                ResultTextArea.setText("Source code wasn't compiled!");
+            }
         }
-        else{
-            ResultTextArea.setText("Source code wasn't compiled!");
+        catch(Exception e){
+            
         }
     }
     
-    private void StackStateChangeActionPerformed(java.awt.event.ActionEvent evt){
-        //StackStatesTableModel.setDataVector(VM.getStackState(), new java.util.Vector(Arrays.asList(StackStatesTableColumns)));
-        //StackStatesTable.setModel(StackStatesTableModel);
+    @Override
+    public void actionPerformed(java.awt.event.ActionEvent evt) {
+        //ByteCodeTable.setRowSelectionInterval(ByteCodeTableRowsCounter-1, ByteCodeTableRowsCounter);
+        // Проверять - если ByteCodeTableRowsCounter не соответствует текущей выбранной строке, то
+        if(ByteCodeTableRowsCounter < ByteCodeTable.getRowCount()){
+            ByteCodeTable.setRowSelectionInterval(ByteCodeTableRowsCounter, ByteCodeTableRowsCounter);
+            setStackState(StackStates.get(ByteCodeTableRowsCounter));
+            ByteCodeTableRowsCounter++;
+        }
+        else{
+            ByteCodeTableTimer.stop();
+            ByteCodeTableRowsCounter = 0;
+        }
+    }
+    
+//    private void StackStateChangeActionPerformed(java.awt.event.ActionEvent evt){
+//        StackStatesTableModel.setDataVector(VM.getStackState(), new Vector(Arrays.asList(StackStatesTableColumns)));
+//        StackStatesTable.setModel(StackStatesTableModel);
+//    }
+    
+    public void setStackState(Vector StackState){
+        StackStatesTableModel.setDataVector(StackState, StackStatesTableColumnHeaders);
+        StackStatesTable.setModel(StackStatesTableModel);
     }
     
     private void MenuItemOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenFileActionPerformed
-        int returnVal = fileChooser.showOpenDialog(this);
+        ResultTextArea.setText("");
+        int returnVal = OpenFileChooser.showOpenDialog(this);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fileChooser.getSelectedFile();
+            file = OpenFileChooser.getSelectedFile();
             try {
                 SourceCodeTextArea.read( new FileReader( file.getAbsolutePath() ), null );
             }
@@ -347,16 +414,13 @@ public class MainFrame extends javax.swing.JFrame {
             //System.out.println("File access cancelled by user.");
             ResultTextArea.setText("File access cancelled by user.");
         }
+        FileOpened = true;
     }//GEN-LAST:event_MenuItemOpenFileActionPerformed
 
     private void MenuItemExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemExitActionPerformed
         //dispose();
         System.exit(0);
     }//GEN-LAST:event_MenuItemExitActionPerformed
-
-    private void MenuItemNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemNewActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_MenuItemNewActionPerformed
 
     private void MenuItemCompileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemCompileActionPerformed
         CompileButtonActionPerformed(evt);
@@ -373,6 +437,55 @@ public class MainFrame extends javax.swing.JFrame {
     private void MenuItemHelpContentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemHelpContentsActionPerformed
         helpContentsFrame.setVisible(true);
     }//GEN-LAST:event_MenuItemHelpContentsActionPerformed
+
+    private void MenuItemSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSaveActionPerformed
+        ResultTextArea.setText("");
+        if(FileOpened){
+            try{
+                fileWriter = new FileWriter(file);
+                fileWriter.write(SourceCodeTextArea.getText());
+                fileWriter.close();
+            }
+            catch(IOException e){
+                System.err.println("Error: "+e.getMessage());
+            }
+        }
+        else{
+            MenuItemSaveAsActionPerformed(evt);
+        }
+    }//GEN-LAST:event_MenuItemSaveActionPerformed
+
+    private void MenuItemSaveAsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemSaveAsActionPerformed
+        ResultTextArea.setText("");
+        int returnVal = SaveAsFileChooser.showSaveDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            String SaveAsFileName = SaveAsFileChooser.getSelectedFile().getName();
+            try{
+                file = new File(SaveAsFileName);
+                if(!file.exists()){
+                    file.createNewFile();
+                }
+                fileWriter = new FileWriter(file);
+                fileWriter.write(SourceCodeTextArea.getText());
+                fileWriter.close();
+            }
+            catch(IOException e){
+                System.err.println("Error: "+e.getMessage());
+            }
+        }
+        else{
+             ResultTextArea.setText("File access cancelled by user.");
+        }
+    }//GEN-LAST:event_MenuItemSaveAsActionPerformed
+
+    private void MenuItemCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemCloseActionPerformed
+        ResultTextArea.setText("");
+        SourceCodeTextArea.setText("");
+        if(FileOpened){
+            FileOpened = false;
+            //SourceCodeTextArea.setText("");
+        }
+    }//GEN-LAST:event_MenuItemCloseActionPerformed
 
     /**
      * @param args the command line arguments
@@ -410,10 +523,16 @@ public class MainFrame extends javax.swing.JFrame {
         });
     }
     
+    
     private boolean Compiled;
+    private boolean FileOpened;
     private AboutFrame aboutFrame;
     private HelpContentsFrame helpContentsFrame;
-    private TextFileChooserFilter textFileChooserFilter;
+    private TextFileChooserFilter OpenFileChooserFilter;
+    private TextFileChooserFilter SaveAsFileChooserFilter;
+    File file;
+    FileWriter fileWriter;
+    //BufferedWriter bufferedWriter;
     
     javax.swing.table.DefaultTableModel ByteCodeTableModel;
     javax.swing.table.DefaultTableModel StackStatesTableModel;
@@ -424,26 +543,36 @@ public class MainFrame extends javax.swing.JFrame {
     javax.swing.table.TableColumn CodeColumn;
     javax.swing.table.TableColumn DescColumn;
     
-    String ByteCodeTableColumns[] = {"Address", "Code", "Description"};
-    String StackStatesTableColumns[] = {"Operands", "Command"};
+    private Vector<Vector> StackStates;
     
+    final String ByteCodeTableColumns[] = {"Address", "Code", "Description"};
+    final String StackStatesTableColumns[] = {"Operands", "Command"};
+    final Vector StackStatesTableColumnHeaders = new Vector(Arrays.asList(StackStatesTableColumns));
     
+    private int ByteCodeTableRowsCounter = 0;
+    private javax.swing.Timer ByteCodeTableTimer = new javax.swing.Timer(500, this);
+    
+    private javax.swing.JFileChooser SaveAsFileChooser;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ByteCodeLabel;
     private javax.swing.JTable ByteCodeTable;
     private javax.swing.JButton CompileButton;
     private javax.swing.JMenu FileMenuItem;
+    private javax.swing.JLabel InputLabel;
+    private javax.swing.JTextField InputTextField;
     private javax.swing.JMenuBar MenuBar;
     private javax.swing.JMenuItem MenuItemAbout;
+    private javax.swing.JMenuItem MenuItemClose;
     private javax.swing.JMenuItem MenuItemCompile;
     private javax.swing.JMenuItem MenuItemExit;
     private javax.swing.JMenu MenuItemHelp;
     private javax.swing.JMenuItem MenuItemHelpContents;
-    private javax.swing.JMenuItem MenuItemNew;
     private javax.swing.JMenuItem MenuItemOpenFile;
     private javax.swing.JMenuItem MenuItemRun;
     private javax.swing.JMenuItem MenuItemSave;
     private javax.swing.JMenuItem MenuItemSaveAs;
+    private javax.swing.JFileChooser OpenFileChooser;
+    private javax.swing.JButton PauseButton;
     private javax.swing.JLabel ResultLabel;
     private javax.swing.JTextArea ResultTextArea;
     private javax.swing.JButton RunButton;
@@ -452,7 +581,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextArea SourceCodeTextArea;
     private javax.swing.JLabel StackStatesLabel;
     private javax.swing.JTable StackStatesTable;
-    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
