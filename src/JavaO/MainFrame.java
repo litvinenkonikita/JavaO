@@ -27,20 +27,10 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     public MainFrame() {
         initComponents();
         setResizable(false);
-        RunButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RunButtonActionPerformed(evt);
-            }
-        });
-        PauseButton.addActionListener(new java.awt.event.ActionListener(){
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ByteCodeTableTimer.stop();
-            }
-        });
-        
+
         Compiled = false;
         FileOpened = false;
-        
+
         OpenFileChooserFilter = new TextFileChooserFilter();
         //SaveAsFileChooserFilter = new TextFileChooserFilter();
         
@@ -71,7 +61,6 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         StackStatesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         
         StackStates = new Vector<Vector>();
-        
     }
 
     /** This method is called from within the constructor to
@@ -93,12 +82,11 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         CompileButton = new javax.swing.JButton();
         ByteCodeLabel = new javax.swing.JLabel();
         StackStatesLabel = new javax.swing.JLabel();
-        RunButton = new javax.swing.JButton();
+        RunPauseButton = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         ByteCodeTable = new javax.swing.JTable();
         jScrollPane4 = new javax.swing.JScrollPane();
         StackStatesTable = new javax.swing.JTable();
-        PauseButton = new javax.swing.JButton();
         InputLabel = new javax.swing.JLabel();
         InputTextField = new javax.swing.JTextField();
         MenuBar = new javax.swing.JMenuBar();
@@ -134,6 +122,9 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         ResultLabel.setText("Result");
 
         CompileButton.setText("Compile");
+        CompileButton.setMaximumSize(new java.awt.Dimension(100, 30));
+        CompileButton.setMinimumSize(new java.awt.Dimension(100, 30));
+        CompileButton.setPreferredSize(new java.awt.Dimension(100, 30));
         CompileButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CompileButtonActionPerformed(evt);
@@ -144,7 +135,15 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
 
         StackStatesLabel.setText("Stack states");
 
-        RunButton.setText("   Run   ");
+        RunPauseButton.setText("   Run   ");
+        RunPauseButton.setMaximumSize(new java.awt.Dimension(100, 30));
+        RunPauseButton.setMinimumSize(new java.awt.Dimension(100, 30));
+        RunPauseButton.setPreferredSize(new java.awt.Dimension(100, 30));
+        RunPauseButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RunPauseButtonActionPerformed(evt);
+            }
+        });
 
         ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -171,8 +170,6 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
             }
         ));
         jScrollPane4.setViewportView(StackStatesTable);
-
-        PauseButton.setText("Pause");
 
         InputLabel.setText("Input");
 
@@ -230,7 +227,7 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         });
         RunMenu.add(MenuItemCompile);
 
-        MenuItemRun.setText("Run");
+        MenuItemRun.setText("Run / Pause");
         MenuItemRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 MenuItemRunActionPerformed(evt);
@@ -280,16 +277,14 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(CompileButton)
+                                .addComponent(CompileButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(RunButton)))
+                                .addComponent(RunPauseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(44, 44, 44)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 366, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(PauseButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(ByteCodeLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(ByteCodeLabel))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -301,9 +296,8 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(CompileButton)
-                    .addComponent(RunButton)
-                    .addComponent(PauseButton))
+                    .addComponent(CompileButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(RunPauseButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceCodeLabel)
@@ -353,14 +347,13 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         }
     }//GEN-LAST:event_CompileButtonActionPerformed
 
-    private void RunButtonActionPerformed(java.awt.event.ActionEvent evt){
+    private void RunActionPerformed(/*java.awt.event.ActionEvent evt*/){
         ResultTextArea.setText("");
         try{    
             if(Compiled){
                 JavaO.run();
                 StackStates = VM.getStackStates();
                 ResultTextArea.setText(VM.getResult());
-                int ByteCodeRowCount = ByteCodeTable.getRowCount();
                 ByteCodeTableTimer.start();
             }
             else{
@@ -368,7 +361,8 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
             }
         }
         catch(Exception e){
-            
+            //System.err.println(e.getMessage());
+            ResultTextArea.setText("Exception: \n"+e.getMessage());
         }
     }
     
@@ -397,6 +391,20 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         StackStatesTable.setModel(StackStatesTableModel);
     }
     
+    private void Run() {                                            
+        if(!Running){
+            RunPauseButton.setText("Pause");
+            Running = true;
+            RunActionPerformed();
+        }
+        else{
+            RunPauseButton.setText("Run");
+            Running = false;
+            ByteCodeTableTimer.stop();
+        }
+    }         
+    
+    
     private void MenuItemOpenFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemOpenFileActionPerformed
         ResultTextArea.setText("");
         int returnVal = OpenFileChooser.showOpenDialog(this);
@@ -405,9 +413,9 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
             try {
                 SourceCodeTextArea.read( new FileReader( file.getAbsolutePath() ), null );
             }
-            catch(IOException ex) {
+            catch(IOException e) {
                 //System.out.println("problem accessing file "+file.getAbsolutePath());
-                ResultTextArea.setText("problem accessing file "+file.getAbsolutePath());
+                ResultTextArea.setText("problem accessing file "+file.getAbsolutePath() + "\n" + e.getMessage());
             }
         }
         else{
@@ -427,7 +435,7 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     }//GEN-LAST:event_MenuItemCompileActionPerformed
 
     private void MenuItemRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemRunActionPerformed
-        RunButtonActionPerformed(evt);
+        Run();
     }//GEN-LAST:event_MenuItemRunActionPerformed
 
     private void MenuItemAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuItemAboutActionPerformed
@@ -447,7 +455,8 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
                 fileWriter.close();
             }
             catch(IOException e){
-                System.err.println("Error: "+e.getMessage());
+                //System.err.println("Error: "+e.getMessage());
+                ResultTextArea.setText("problem saving file "+file.getAbsolutePath() + "\n" + e.getMessage());
             }
         }
         else{
@@ -470,7 +479,8 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
                 fileWriter.close();
             }
             catch(IOException e){
-                System.err.println("Error: "+e.getMessage());
+                //System.err.println("Error: "+e.getMessage());
+                ResultTextArea.setText("problem saving file "+file.getAbsolutePath() + "\n" + e.getMessage());
             }
         }
         else{
@@ -486,6 +496,10 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
             //SourceCodeTextArea.setText("");
         }
     }//GEN-LAST:event_MenuItemCloseActionPerformed
+
+    private void RunPauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RunPauseButtonActionPerformed
+        Run();
+    }//GEN-LAST:event_RunPauseButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -526,6 +540,7 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     
     private boolean Compiled;
     private boolean FileOpened;
+    private boolean Running = false;
     private AboutFrame aboutFrame;
     private HelpContentsFrame helpContentsFrame;
     private TextFileChooserFilter OpenFileChooserFilter;
@@ -572,11 +587,10 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     private javax.swing.JMenuItem MenuItemSave;
     private javax.swing.JMenuItem MenuItemSaveAs;
     private javax.swing.JFileChooser OpenFileChooser;
-    private javax.swing.JButton PauseButton;
     private javax.swing.JLabel ResultLabel;
     private javax.swing.JTextArea ResultTextArea;
-    private javax.swing.JButton RunButton;
     private javax.swing.JMenu RunMenu;
+    private javax.swing.JButton RunPauseButton;
     private javax.swing.JLabel SourceCodeLabel;
     private javax.swing.JTextArea SourceCodeTextArea;
     private javax.swing.JLabel StackStatesLabel;
