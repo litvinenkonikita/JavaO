@@ -7,6 +7,7 @@ package JavaO;
 
 import JavaO.Tables.TableItem;
 import JavaO.Tables.Table;
+import java.util.HashMap;
 
 public class Syntax {
     
@@ -21,6 +22,18 @@ public class Syntax {
                     StProcInInt = 9,
                     StProcOutInt = 10,
                     StProcOutLn = 11;
+    
+    private static HashMap<Integer, String> VariablesMap = new HashMap<Integer, String>();
+    
+    static HashMap<Integer, String> getVariables(){
+        return VariablesMap;
+    }
+    
+    
+    static void addVariable(int Address, String VarName){
+        VariablesMap.put(Address, VarName);
+    }
+    
     // Check lex
     static void checkLex(int Lex, String Message) throws Exception {
         if(Lexer.CurrentLex != Lex){
@@ -190,7 +203,7 @@ public class Syntax {
             Item = Table.findName(Lexer.CurrentName);
             if(Item.Category == Table.CategoryVar){
                 CodeGen.Address(Item);
-                VM.addVariable(CodeGen.PC, Item.Name);
+                addVariable(CodeGen.PC, Item.Name);
                 CodeGen.Command(VM.CommandLoad);
                 Lexer.NextLex();
                 return Item.Type;
@@ -350,7 +363,7 @@ public class Syntax {
                 ErrorMessage.Expected("Variable name");
             }
             CodeGen.Address(VarItem);
-            VM.addVariable(CodeGen.PC, VarItem.Name);
+            addVariable(CodeGen.PC, VarItem.Name);
             Lexer.NextLex();
         }
     }
@@ -642,7 +655,7 @@ public class Syntax {
         Module();
         Table.closeScope();
         Table.closeScope();
-        VM.Result += "\nCompilation complete.\n";
+//        VM.Result += "\nCompilation complete.\n";
     }
 
 }

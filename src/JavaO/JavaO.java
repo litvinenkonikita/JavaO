@@ -18,7 +18,7 @@ public class JavaO {
         Table.init();
         Lexer.init();
         CodeGen.init();
-        VM.init();
+        ////VM.init();
     }
     
     public static void compile() throws Exception{
@@ -26,8 +26,8 @@ public class JavaO {
         Syntax.compile();
     }
 
-    public static void run()/* throws Exception */{
-        VM.run();
-    }
+////    public static void run()/* throws Exception */{
+////        VM.run();
+////    }
     
 }

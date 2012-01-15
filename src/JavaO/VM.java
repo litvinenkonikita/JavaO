@@ -9,8 +9,10 @@ import java.io.StreamTokenizer;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.HashMap;
+import javax.swing.SwingWorker;
 
-public class VM {
+public class VM/* extends SwingWorker<Vector<Vector>, Vector>*/{
     
     static final int MemorySize = 8 * 1024;
     
@@ -63,24 +65,36 @@ public class VM {
 //        return (int)input.nval;
 //    }
     
+//    @Override
+//    protected Vector<Vector> doInBackground(){
+//        return StackStates;
+//    }
 
-    private static String ByteCode;
-    static String Result;
-    private static java.util.HashMap<Integer, String> VariablesMap;
-    private static Vector StackState;
-    private static Vector<Vector> StackStates;
+    private String ByteCode;
+    String Result;
+    private HashMap<Integer, String> VariablesMap;
+    private Vector StackState;
+    private Vector<Vector> StackStates;
     
-    static int getByteCodeCount(){
+    
+    
+    public VM(int Memory[], HashMap<Integer, String> VariablesMap){
+        init();
+        this.Memory = Memory;
+        this.VariablesMap = VariablesMap;
+    }
+    
+    int getByteCodeCount(){
         int Length = 0;
         while((Memory[Length++]) != CommandStop);
         return Length;
     }
     
-    public static void addVariable(int Address, String VarName){
-        VariablesMap.put(Address, VarName);
-    }
+////    public void addVariable(int Address, String VarName){
+////        VariablesMap.put(Address, VarName);
+////    }
     
-    public static Vector getByteCode(){
+    public Vector getByteCode(){
         Vector ResultByteCodeVector = new Vector();
         Vector Row;
         Integer Command = new Integer(0);
@@ -206,7 +220,7 @@ public class VM {
         return ResultByteCodeVector;
     }
     
-    public static String getResult(){
+    public String getResult(){
         return Result;
     }
     
@@ -220,20 +234,20 @@ public class VM {
 //        StackState = StackState_;
 //    }
     
-    public static Vector<Vector> getStackStates(){
+    public Vector<Vector> getStackStates(){
         return StackStates;
     }
     
-    static void init(){
+    void init(){
         Memory = new int[MemorySize];
         //ByteCode = new String();
         Result = new String();
         StackStates = new Vector<Vector>();
         //StackState = new Vector();
-        VariablesMap = new java.util.HashMap<Integer, String>();
+        VariablesMap = new HashMap<Integer, String>();
     }
     
-    static void run(){
+    void run(){
         //StackState.clear();
         //StackState = new Vector();
         

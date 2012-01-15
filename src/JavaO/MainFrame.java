@@ -61,6 +61,9 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         StackStatesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         
         StackStates = new Vector<Vector>();
+        ByteCodeTableTimer = new javax.swing.Timer(500, this);
+        
+        //Vm = new VM(CodeGen.getMemory(), Syntax.getVariables());
     }
 
     /** This method is called from within the constructor to
@@ -335,8 +338,11 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         Text.SourceCode = SourceCodeTextArea.getText().getBytes();
         try{
             JavaO.compile();
-            ResultTextArea.setText(VM.getResult());
-            ByteCodeTableModel.setDataVector(VM.getByteCode(), new Vector(Arrays.asList(ByteCodeTableColumns)));
+            Vm = new VM(CodeGen.getMemory(), Syntax.getVariables());
+            ////ResultTextArea.setText(VM.getResult());
+            ResultTextArea.setText("\nCompilation complete.\n");
+            ////ByteCodeTableModel.setDataVector(VM.getByteCode(), new Vector(Arrays.asList(ByteCodeTableColumns)));
+            ByteCodeTableModel.setDataVector(Vm.getByteCode(), new Vector(Arrays.asList(ByteCodeTableColumns)));
             ByteCodeTable.setModel(ByteCodeTableModel);
             Compiled = true;
         }
@@ -351,9 +357,13 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
         ResultTextArea.setText("");
         try{    
             if(Compiled){
-                JavaO.run();
-                StackStates = VM.getStackStates();
-                ResultTextArea.setText(VM.getResult());
+                ////JavaO.run();
+////                VM.run();
+////                StackStates = VM.getStackStates();
+                Vm.run();
+                StackStates = Vm.getStackStates();
+////                ResultTextArea.setText(VM.getResult());
+                ResultTextArea.setText(Vm.getResult());
                 ByteCodeTableTimer.start();
             }
             else{
@@ -565,9 +575,11 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     final Vector StackStatesTableColumnHeaders = new Vector(Arrays.asList(StackStatesTableColumns));
     
     private int ByteCodeTableRowsCounter = 0;
-    private javax.swing.Timer ByteCodeTableTimer = new javax.swing.Timer(500, this);
+    private javax.swing.Timer ByteCodeTableTimer;
     
     private javax.swing.JFileChooser SaveAsFileChooser;
+    
+    private VM Vm;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ByteCodeLabel;
     private javax.swing.JTable ByteCodeTable;
