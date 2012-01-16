@@ -380,9 +380,14 @@ public class MainFrame extends javax.swing.JFrame implements java.awt.event.Acti
     public void actionPerformed(java.awt.event.ActionEvent evt) {
         //ByteCodeTable.setRowSelectionInterval(ByteCodeTableRowsCounter-1, ByteCodeTableRowsCounter);
         // Проверять - если ByteCodeTableRowsCounter не соответствует текущей выбранной строке, то
-        if(ByteCodeTableRowsCounter < ByteCodeTable.getRowCount()){
+        //System.out.println(ByteCodeTableRowsCounter+" "+ByteCodeTable.getRowCount());
+        if(ByteCodeTableRowsCounter < ByteCodeTable.getRowCount()-1){
             ByteCodeTable.setRowSelectionInterval(ByteCodeTableRowsCounter, ByteCodeTableRowsCounter);
             setStackState(StackStates.get(ByteCodeTableRowsCounter));
+            ByteCodeTableRowsCounter++;
+        }
+        else if(ByteCodeTableRowsCounter == ByteCodeTable.getRowCount()-1){
+            ByteCodeTable.setRowSelectionInterval(ByteCodeTableRowsCounter, ByteCodeTableRowsCounter);
             ByteCodeTableRowsCounter++;
         }
         else{
