@@ -8,6 +8,8 @@ package JavaO;
 import JavaO.Tables.TableItem;
 import JavaO.Tables.Table;
 import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Vector;
 
 public class Syntax {
     
@@ -33,6 +35,47 @@ public class Syntax {
     static void addVariable(int Address, String VarName){
         VariablesMap.put(Address, VarName);
     }
+    
+    
+    static int getByteCodeCount(){
+        return CodeGen.getMemory().length;
+    }
+    
+    static Vector getByteCode(){
+        Vector ResultByteCodeVector = new Vector();
+        Vector Row;
+        Integer Command = new Integer(0);
+        String CommandStr = new String();
+        String CommandDesc = new String();
+        int PC = 0;
+        int Memory[] = CodeGen.getMemory();
+        while((Command = Memory[PC++]) != VM.CommandStop){
+            if(Command >= 0){
+                CommandStr = Command.toString();
+                if(VariablesMap.containsKey(PC)){
+                    CommandDesc = "variable "+VariablesMap.get(PC);
+                }
+                else{
+                    if(PC == getByteCodeCount()-1){
+                        CommandDesc = "return code";
+                    }
+                    else{
+                        CommandDesc = "const";
+                    }
+                }
+            }
+            else{
+                CommandDesc = "command";
+                CommandStr = VM.CommandsMap.get(Command);
+            }
+            Row = new Vector(Arrays.asList(PC-1, CommandStr, CommandDesc));
+            ResultByteCodeVector.add(Row);
+        }
+        Row = new Vector(Arrays.asList(PC-1, "STOP", "command"));
+        ResultByteCodeVector.add(Row);
+        return ResultByteCodeVector;
+    }
+    
     
     // Check lex
     static void checkLex(int Lex, String Message) throws Exception {

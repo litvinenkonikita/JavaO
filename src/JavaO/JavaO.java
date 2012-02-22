@@ -25,9 +25,4 @@ public class JavaO {
         init();
         Syntax.compile();
     }
-
-////    public static void run()/* throws Exception */{
-////        VM.run();
-////    }
-    
 }

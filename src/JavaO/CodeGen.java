@@ -21,18 +21,14 @@ public class CodeGen {
     static void init(){
         PC = 0;
         Memory = new int[VM.MemorySize];
-        //VM.Memory = new int[VM.MemorySize];
     }
     
     static void Command(int Command){
         Memory[PC++] = Command;
-        //VM.Memory[PC++] = Command;
     }
     
     static void fixup(int A){
         while(A > 0){
-//            int Temp = VM.Memory[A-2];
-//            VM.Memory[A-2] = PC;
             int Temp = Memory[A-2];
             Memory[A-2] = PC;
             A = Temp;
