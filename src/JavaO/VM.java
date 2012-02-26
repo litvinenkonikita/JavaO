@@ -331,17 +331,29 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
             }
             publish(FStackState);
             StackStates.add(FStackState);
-            try{
-                Thread.sleep(mainFrame.getDelay() * 1000);
-            }
-            catch(InterruptedException e){
-                //запись в лог
-            }
             
-            if(mainFrame.getStepForward()){
+//            if(!mainFrame.getStepForward()){
+//                try{
+//                    Thread.sleep(mainFrame.getDelay() * 1000);
+//                }
+//                catch(InterruptedException e){
+//                    //запись в лог
+//                }
+//            }
+//            
+            if(mainFrame.getStepForward()){ //  Это не успевает
+                //System.out.println("!");
+                mainFrame.Running = false; 
                 mainFrame.Paused = true;
-                mainFrame.Running = false;
                 mainFrame.setStepForward(false);
+            }
+            else{
+                try{
+                    Thread.sleep(mainFrame.getDelay() * 1000);
+                }
+                catch(InterruptedException e){
+                    //запись в лог
+                }
             }
             
             synchronized(monitor){

@@ -597,6 +597,7 @@ public class MainFrame extends javax.swing.JFrame{
     }
     
     private void Run() {    
+        //System.out.println("Run : " + Running + " " + Paused + " " + getStepForward());
         if(Compiled){
             setPauseEnabled(true);
             setCompileEnabled(false);
@@ -604,7 +605,7 @@ public class MainFrame extends javax.swing.JFrame{
             setStopEnabled(false);
             StepBackButton.setEnabled(false);
             StepForwardButton.setEnabled(false);
-            
+            setStepForward(false);
             if(StepBack){
                 StepBack = false;
                 // тут вывод всех состояний из запомненых от n до конца
@@ -614,7 +615,7 @@ public class MainFrame extends javax.swing.JFrame{
                     Running = true;
                     RunActionPerformed();
                 }
-                else if(Paused){
+                else if(Paused/* || getStepForward()*/){
                     synchronized(Vm.monitor){
                         Running = true;
                         Paused = false;
@@ -763,6 +764,8 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_PauseButtonActionPerformed
 
     private void StepForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepForwardButtonActionPerformed
+        //System.out.println("StepForward : " + Running + " " + Paused);
+        //setRunEnabled(false);
         if( !Running && !Paused ){
             //Running = true;
             setStepForward(true);
@@ -770,12 +773,20 @@ public class MainFrame extends javax.swing.JFrame{
         }
         else if(Paused){
             synchronized(Vm.monitor){
-                Running = true;
-                Paused = false;
+                Running = true;// - ?
+                Paused = false;// - ?
                 Vm.monitor.notifyAll();
             }
             setStepForward(true);
         }
+//        try{
+//            Thread.sleep(1000);
+//        }
+//        catch(InterruptedException e){}
+        
+        //setRunEnabled(true);
+        
+        
 //        if(StackStateNumber > 0){
 //            StepBackButton.setEnabled(true);
 //        }

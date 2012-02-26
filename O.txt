@@ -3,9 +3,4 @@ VAR i,j,k : INTEGER;
 
 BEGIN
     i := 2+3+4;
-j:=123;
-WHILE i < j DO
-  INC(i);
-END;
-
 END test.
