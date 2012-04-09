@@ -309,7 +309,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="StackStatesLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Stack state"/>
+        <Property name="text" type="java.lang.String" value="Stack"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="RunPauseButton">

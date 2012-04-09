@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.BufferedWriter;
 import java.util.Arrays;
 import java.util.Vector;
+import java.util.Stack;
 import javax.swing.JFileChooser;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.JFormattedTextField;
@@ -35,7 +35,6 @@ public class MainFrame extends javax.swing.JFrame{
         Running = false;
         Paused = false;
         StepForward = false;
-        //DelayChanged = false;
         Stopped = false;
         Recompiled = false;
         
@@ -172,7 +171,7 @@ public class MainFrame extends javax.swing.JFrame{
 
         ByteCodeLabel.setText("Byte-code");
 
-        StackStatesLabel.setText("Stack state");
+        StackStatesLabel.setText("Stack");
 
         RunPauseButton.setText("   Run   ");
         RunPauseButton.setMaximumSize(new java.awt.Dimension(100, 30));
@@ -494,9 +493,15 @@ public class MainFrame extends javax.swing.JFrame{
                 ByteCodeTableModel.setDataVector(Syntax.getByteCode(), new Vector(Arrays.asList(ByteCodeTableColumns)));
                 ByteCodeTable.setModel(ByteCodeTableModel);
                 Compiled = true;
-                //setCompileEnabled(false);
+                Paused = false;
                 setRunEnabled(true);
+                StepForward = false;
+                StepBack = 0;
                 StepForwardButton.setEnabled(true);
+                StepBackButton.setEnabled(false);
+                StackStateNumber = -1;
+                BackForwardStack = new Stack<FullStackState>();
+                ResultTextArea.setText(ErrorMessage.getMessage());
             }
             catch(Exception e){
                 clearTextAreas();
@@ -513,7 +518,6 @@ public class MainFrame extends javax.swing.JFrame{
             Vm.execute();
         }
         catch(Exception e){
-            //System.err.println(e.getMessage());
             ResultTextArea.setText("Exception: \n"+e.getMessage());
         }
     }
@@ -528,7 +532,6 @@ public class MainFrame extends javax.swing.JFrame{
     }
     
     public void setFullStackState(FullStackState FStackState){
-        StackStateNumber = FStackState.StackStateNumber;
         ByteCodeTable.setRowSelectionInterval(FStackState.PC, FStackState.PC);
         StackStatesTableModel.setDataVector(FStackState.State, StackStatesTableColumnHeaders);
         StackStatesTable.setModel(StackStatesTableModel);
@@ -541,6 +544,10 @@ public class MainFrame extends javax.swing.JFrame{
     public void setStackState(Vector StackState){
         StackStatesTableModel.setDataVector(StackState, StackStatesTableColumnHeaders);
         StackStatesTable.setModel(StackStatesTableModel);
+    }
+    
+    public void setStackStateNumber(int StackStateNumber){
+        this.StackStateNumber = StackStateNumber;
     }
     
     public void setStackStates(Vector<FullStackState> StackStates){
@@ -558,6 +565,10 @@ public class MainFrame extends javax.swing.JFrame{
     
     public void setRunning(boolean Running){
         this.Running = Running;
+    }
+    
+    public boolean getRunning(){
+        return this.Running;
     }
     
     public void setStopped(boolean Stopped){
@@ -597,7 +608,6 @@ public class MainFrame extends javax.swing.JFrame{
     }
     
     private void Run() {    
-        //System.out.println("Run : " + Running + " " + Paused + " " + getStepForward());
         if(Compiled){
             setPauseEnabled(true);
             setCompileEnabled(false);
@@ -606,21 +616,15 @@ public class MainFrame extends javax.swing.JFrame{
             StepBackButton.setEnabled(false);
             StepForwardButton.setEnabled(false);
             setStepForward(false);
-            if(StepBack){
-                StepBack = false;
-                // тут вывод всех состояний из запомненых от n до конца
+            if( !Running && !Paused ){
+                Running = true;
+                RunActionPerformed();
             }
-            else{
-                if( !Running && !Paused ){
+            else if(Paused){
+                synchronized(Vm.monitor){
                     Running = true;
-                    RunActionPerformed();
-                }
-                else if(Paused/* || getStepForward()*/){
-                    synchronized(Vm.monitor){
-                        Running = true;
-                        Paused = false;
-                        Vm.monitor.notifyAll();
-                    }
+                    Paused = false;
+                    Vm.monitor.notifyAll();
                 }
             }
         }
@@ -718,7 +722,6 @@ public class MainFrame extends javax.swing.JFrame{
         SourceCodeTextArea.setText("");
         if(FileOpened){
             FileOpened = false;
-            //SourceCodeTextArea.setText("");
         }
     }//GEN-LAST:event_MenuItemCloseActionPerformed
 
@@ -752,7 +755,6 @@ public class MainFrame extends javax.swing.JFrame{
             Paused = true;
             Running = false;
         }
-        //System.out.println(StackStateNumber);
         setRunEnabled(true);
         setPauseEnabled(false);
         setStopEnabled(true);
@@ -764,33 +766,61 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_PauseButtonActionPerformed
 
     private void StepForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepForwardButtonActionPerformed
-        //System.out.println("StepForward : " + Running + " " + Paused);
-        //setRunEnabled(false);
-        if( !Running && !Paused ){
-            //Running = true;
-            setStepForward(true);
-            RunActionPerformed();
-        }
-        else if(Paused){
-            synchronized(Vm.monitor){
-                Running = true;// - ?
-                Paused = false;// - ?
-                Vm.monitor.notifyAll();
+        if(StepBack == 0){
+            if( !Running && !Paused ){
+                setStepForward(true);
+                RunActionPerformed();
             }
-            setStepForward(true);
+            else if(Paused){
+                synchronized(Vm.monitor){
+                    Running = true;// - ?
+                    Paused = false;// - ?
+                    Vm.monitor.notifyAll();
+                }
+                setStepForward(true);
+            }
+            StackStateNumber = StackStates.size();
         }
-//        try{
-//            Thread.sleep(1000);
+        else/*if(StepBack > 0)*/{
+            StackStateNumber++;
+            setFullStackState(BackForwardStack.pop());
+
+            ////System.out.println(BackForwardStack.size());
+//            System.out.println("PC = " + s.PC + "  StackStateNumber = " + s.StackStateNumber);
+//            System.out.println("State :");
+//            for(Object x : s.State){
+//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//            }
+            
+            StepBack--;
+            
+            if(StepBack > 0){
+                setRunEnabled(false);
+                setPauseEnabled(false);
+            }
+            else/*if(StepBack == 0)*/{
+                setRunEnabled(true);
+            }
+        }
+        
+//        if(StackStates.size() != 0){
+//            FullStackState s = StackStates.lastElement();
+//            System.out.println("PC = " + s.PC + "  StackStateNumber = " + s.StackStateNumber);
+//            System.out.println("State :");
+//            for(Object x : s.State){
+//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//            }
+//            System.out.println("====================");
 //        }
-//        catch(InterruptedException e){}
         
-        //setRunEnabled(true);
-        
-        
-//        if(StackStateNumber > 0){
-//            StepBackButton.setEnabled(true);
-//        }
-        //System.out.println(StackStateNumber);
+        if(StackStateNumber /*>*/>= 0/* && StackStateNumber < StackStates.size()*/){
+            StepBackButton.setEnabled(true);
+        }
+        else{
+            StepBackButton.setEnabled(false);
+        }
+
+        StopButton.setEnabled(true);
     }//GEN-LAST:event_StepForwardButtonActionPerformed
 
     private void StopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StopButtonActionPerformed
@@ -802,6 +832,10 @@ public class MainFrame extends javax.swing.JFrame{
             Paused = false;
             Stopped = true;
         //}
+        StackStateNumber = 0;
+        StepForward = false;
+
+        StepBack = 0;
         StepBackButton.setEnabled(false);
         StepForwardButton.setEnabled(true);
         setPauseEnabled(false);
@@ -810,7 +844,9 @@ public class MainFrame extends javax.swing.JFrame{
         try{
             Thread.sleep(1000);
         }
-        catch(InterruptedException e){}
+        catch(InterruptedException e){
+        
+        }
         setRunEnabled(true);
     }//GEN-LAST:event_StopButtonActionPerformed
 
@@ -823,12 +859,30 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_StopMenuItemActionPerformed
 
     private void StepBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepBackButtonActionPerformed
-        StepBack = true;
-        System.out.println(StackStateNumber);
-        setFullStackState(StackStates.elementAt(StackStateNumber--));
+        StepBack++;
+        StackStateNumber--;
+
+        setFullStackState(StackStates.elementAt(StackStateNumber));
+        BackForwardStack.push(StackStates.elementAt(StackStateNumber+1));
+            
+//        for(FullStackState f : BackForwardStack){
+//            System.out.println("PC = " + f.PC + "  StackStateNumber = " + f.StackStateNumber);
+//            System.out.println("State :");
+//            for(Object x : f.State){
+//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//            }
+//            System.out.println("============================");
+//        }
+            
         if(StackStateNumber == 0){
             StepBackButton.setEnabled(false);
         }
+        
+        if(StepBack > 0){
+            setRunEnabled(false);
+            setPauseEnabled(false);
+        }
+        StopButton.setEnabled(true);
     }//GEN-LAST:event_StepBackButtonActionPerformed
 
     /**
@@ -871,10 +925,10 @@ public class MainFrame extends javax.swing.JFrame{
     private boolean Compiled;
     private boolean Recompiled;
     private boolean FileOpened;
-    /*private */boolean Running;
+    private boolean Running;
     private boolean Stopped;
     public boolean StepForward;
-    public boolean StepBack;
+    public int StepBack;
     boolean Paused;
     
     private AboutFrame aboutFrame;
@@ -883,7 +937,6 @@ public class MainFrame extends javax.swing.JFrame{
     File file;
     FileWriter fileWriter;
     private SpinnerNumberModel DelaySpinnerModel;
-    //BufferedWriter bufferedWriter;
     
     javax.swing.table.DefaultTableModel ByteCodeTableModel;
     javax.swing.table.DefaultTableModel StackStatesTableModel;
@@ -896,6 +949,7 @@ public class MainFrame extends javax.swing.JFrame{
     javax.swing.table.TableColumn DescColumn;
     
     private Vector<FullStackState> StackStates;
+    private Stack<FullStackState> BackForwardStack;
     
     final String ByteCodeTableColumns[] = {"Address", "Code", "Description"};
     final String StackStatesTableColumns[] = {"Operands", "Command"};

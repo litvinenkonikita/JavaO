@@ -13,9 +13,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.HashMap;
+import java.util.Collection;
+import java.util.Collections;
 
 
-public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
+public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullStackState>{
     
     static final int MemorySize = 8 * 1024;
     
@@ -104,7 +106,6 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     private Vector<FullStackState> StackStates;
     private MainFrame mainFrame;
     private int StackStatesCounter;
-    //private long ThreadID;
     
     public VM(int Memory[], HashMap<Integer, String> VariablesMap, MainFrame mainFrame){
         init();
@@ -125,9 +126,8 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     }
     
     void runVM(){
-        //System.out.println(n);
         FullStackState FStackState;
-        Vector Row;
+        Vector Row, StackState2;
         Result = "";
         int PC = 0;
         StackStatesCounter = 0;
@@ -137,18 +137,39 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
         String CommandStr = new String();
 
         while( (Command = Memory[PC++]) != CommandStop ){
-            //System.out.println(Thread.currentThread().getId());
             StackStatesCounter++;
             if(Command >= 0){
                 Memory[--SP] = Command;
             }
             else{
-                StackState = new Vector(StackState);
                 CommandStr = CommandsMap.get(Command);
-                ((Vector)StackState.lastElement()).setElementAt(CommandStr, 1);
-                FStackState = new FullStackState(PC-1, StackStatesCounter-1, StackState, Result);
+                
+                StackState2 = new Vector();
+                for(int i = MemorySize-1; i >= SP; i--){
+                    Row = new Vector(Arrays.asList(Memory[i], null));
+                    StackState2.add(Row);
+                }
+                ((Vector)StackState2.lastElement()).setElementAt(CommandStr, 1);
+                FStackState = new FullStackState(PC-1, StackStatesCounter-1, StackState2, Result);
                 publish(FStackState);
                 StackStates.add(FStackState);
+
+//                System.out.println("PC = " + FStackState.PC + "  StackStateNumber = " + FStackState.StackStateNumber);
+//                System.out.println("State :");
+//                for(Object x : FStackState.State){
+//                    System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//                }
+//                System.out.println("====================");
+                
+//                for(FullStackState F_StackState : StackStates){
+//                    System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
+//                    System.out.println("State :");
+//                    for(Object x : F_StackState.State){
+//                        System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//                    }
+//                    System.out.println("====================");
+//                }
+                
                 try{
                     Thread.sleep(mainFrame.getDelay() * 1000);
                 }
@@ -332,6 +353,22 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
             publish(FStackState);
             StackStates.add(FStackState);
             
+//            System.out.println("PC = " + FStackState.PC + "  StackStateNumber = " + FStackState.StackStateNumber);
+//            System.out.println("State :");
+//            for(Object x : FStackState.State){
+//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//            }
+//            System.out.println("====================");
+            
+//            for(FullStackState F_StackState : StackStates){
+//                System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
+//                System.out.println("State :");
+//                for(Object x : F_StackState.State){
+//                    System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//                }
+//                System.out.println("====================");
+//            }
+            
 //            if(!mainFrame.getStepForward()){
 //                try{
 //                    Thread.sleep(mainFrame.getDelay() * 1000);
@@ -342,8 +379,8 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
 //            }
 //            
             if(mainFrame.getStepForward()){ //  Это не успевает
-                //System.out.println("!");
-                mainFrame.Running = false; 
+                //mainFrame.Running = false;
+                mainFrame.setRunning(false);
                 mainFrame.Paused = true;
                 mainFrame.setStepForward(false);
             }
@@ -357,7 +394,7 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
             }
             
             synchronized(monitor){
-                while(mainFrame.Paused || !mainFrame.Running){
+                while(mainFrame.Paused || !mainFrame.getRunning()/*!mainFrame.Running*/){
                     try{
                         monitor.wait();
                     }
@@ -370,7 +407,7 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
 
         }
         StackState.clear();
-        FStackState = new FullStackState(PC-1, StackStatesCounter-1, StackState, Result);
+        FStackState = new FullStackState(PC-1, StackStatesCounter/*-1*/, StackState, Result);
         publish(FStackState);
         StackStates.add(FStackState);
 
@@ -378,11 +415,19 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
         if(SP < MemorySize){
             Result += "Return code: " + Memory[SP] + "\n\n";
         }
+        
+//        for(FullStackState F_StackState : StackStates){
+//            System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
+//            System.out.println("State :");
+//            for(Object x : F_StackState.State){
+//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
+//            }
+//            System.out.println("====================");
+//        }
     }
     
     @Override
     protected Vector<FullStackState> doInBackground(){
-        //ThreadID = Thread.currentThread().getId();
         runVM();
         return StackStates;
     }
@@ -391,8 +436,6 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     protected void done(){
         mainFrame.setResult(Result);
         mainFrame.setRunning(false);
-        //mainFrame.setStopped(true);
-        //mainFrame.setStackStates(StackStates);
         
         mainFrame.setRunEnabled(true);
         mainFrame.setCompileEnabled(true);
@@ -400,16 +443,14 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
         mainFrame.setStopEnabled(false);
         
         mainFrame.setStepForwardEnabled(true);
-        mainFrame.setStepBackEnabled(true);
-        //System.err.println("END "+ThreadID);
+        mainFrame.setStepBackEnabled(false);
+        
+        mainFrame.setStackStateNumber(-1);
     }
     
     @Override
     protected void process(List<FullStackState> FStackStates){
         for(FullStackState FStackState : FStackStates){
-//            mainFrame.selectByteCode(FStackState.PC);
-//            mainFrame.setStackState(FStackState.State);
-//            mainFrame.setResult(FStackState.Result);
             mainFrame.setFullStackState(FStackState);
         }
         mainFrame.setStackStates(StackStates);
