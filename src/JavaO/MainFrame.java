@@ -521,8 +521,7 @@ public class MainFrame extends javax.swing.JFrame{
             ResultTextArea.setText("Exception: \n"+e.getMessage());
         }
     }
-    
-    
+
     public int getDelay(){
         return ((Integer)DelaySpinner.getValue()).intValue();
     }
@@ -535,6 +534,7 @@ public class MainFrame extends javax.swing.JFrame{
         ByteCodeTable.setRowSelectionInterval(FStackState.PC, FStackState.PC);
         StackStatesTableModel.setDataVector(FStackState.State, StackStatesTableColumnHeaders);
         StackStatesTable.setModel(StackStatesTableModel);
+        setResult(FStackState.Result);
     }
     
     public void selectByteCode(int PC){
@@ -552,6 +552,10 @@ public class MainFrame extends javax.swing.JFrame{
     
     public void setStackStates(Vector<FullStackState> StackStates){
         this.StackStates = StackStates;
+    }
+    
+    public void clearStackStates(){
+        this.StackStates.clear();
     }
     
     public void setVariables(Vector Variables){
@@ -779,19 +783,10 @@ public class MainFrame extends javax.swing.JFrame{
                 }
                 setStepForward(true);
             }
-            StackStateNumber = StackStates.size();
         }
         else/*if(StepBack > 0)*/{
             StackStateNumber++;
-            setFullStackState(BackForwardStack.pop());
-
-            ////System.out.println(BackForwardStack.size());
-//            System.out.println("PC = " + s.PC + "  StackStateNumber = " + s.StackStateNumber);
-//            System.out.println("State :");
-//            for(Object x : s.State){
-//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//            }
-            
+            setFullStackState(BackForwardStack.pop());           
             StepBack--;
             
             if(StepBack > 0){
@@ -802,25 +797,22 @@ public class MainFrame extends javax.swing.JFrame{
                 setRunEnabled(true);
             }
         }
-        
-//        if(StackStates.size() != 0){
-//            FullStackState s = StackStates.lastElement();
-//            System.out.println("PC = " + s.PC + "  StackStateNumber = " + s.StackStateNumber);
-//            System.out.println("State :");
-//            for(Object x : s.State){
-//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//            }
-//            System.out.println("====================");
-//        }
-        
-        if(StackStateNumber /*>*/>= 0/* && StackStateNumber < StackStates.size()*/){
+
+        if(StackStateNumber > 0){
             StepBackButton.setEnabled(true);
         }
         else{
             StepBackButton.setEnabled(false);
         }
-
+        
         StopButton.setEnabled(true);
+        
+        try{
+            Thread.sleep(500);
+        }
+        catch(InterruptedException e){
+        
+        }
     }//GEN-LAST:event_StepForwardButtonActionPerformed
 
     private void StopButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StopButtonActionPerformed
@@ -861,18 +853,9 @@ public class MainFrame extends javax.swing.JFrame{
     private void StepBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepBackButtonActionPerformed
         StepBack++;
         StackStateNumber--;
-
+        
         setFullStackState(StackStates.elementAt(StackStateNumber));
         BackForwardStack.push(StackStates.elementAt(StackStateNumber+1));
-            
-//        for(FullStackState f : BackForwardStack){
-//            System.out.println("PC = " + f.PC + "  StackStateNumber = " + f.StackStateNumber);
-//            System.out.println("State :");
-//            for(Object x : f.State){
-//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//            }
-//            System.out.println("============================");
-//        }
             
         if(StackStateNumber == 0){
             StepBackButton.setEnabled(false);

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package JavaO;
 
 import javax.swing.filechooser.FileFilter;
@@ -19,8 +15,6 @@ public class TextFileChooserFilter extends javax.swing.filechooser.FileFilter{
     }
     @Override
     public String getDescription() {
-        // This description will be displayed in the dialog,
-        // hard-coded = ugly, should be done via I18N
         return "Text documents (*.txt)";
     }
 

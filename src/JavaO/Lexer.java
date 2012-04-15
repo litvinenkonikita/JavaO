@@ -2,7 +2,7 @@ package JavaO;
 
 /**
  *
- * @author nikita
+ * @author Litvinenko Nikita
  */
 
 public class Lexer {

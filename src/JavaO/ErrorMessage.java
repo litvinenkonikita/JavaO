@@ -14,11 +14,9 @@ public class ErrorMessage {
     private static boolean Ok = true;
     
     public static void Error(String Msg) throws Exception{
-        //System.out.println("Error at " + Location.Pos + " position " + Location.Line + " line :\n\n" + Msg);
-        Message = "Error at " + Location.Pos + " position " + Location.Line + " line :\n\n" + Msg;
+        Message = "Error at " + Location.LexPos + " position " + Location.Line + " line :\n\n" + Msg;
         Ok = false;
-        throw new Exception("Compilation error.");
-        //System.exit(0);
+        throw new Exception("Compilation error."); // Event!
     }
     
     public static void Expected(String Msg) throws Exception{

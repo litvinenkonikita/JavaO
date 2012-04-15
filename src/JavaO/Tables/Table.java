@@ -41,7 +41,6 @@ public class Table {
         Item.Type = Type;
         Item.Val = Value;
         Top++;
-        //NamesTable.add(Top, Item);
         NamesTable.add(Item);
     }
     
@@ -55,10 +54,8 @@ public class Table {
     public static void closeScope(){
         while(((TableItem)NamesTable.get(Top)).Category != CategoryGuard){
             NamesTable.remove(Top--);
-            //Top--;
         }
         NamesTable.remove(Top--);
-        //Top--;
         Bottom = Top;
     }
     

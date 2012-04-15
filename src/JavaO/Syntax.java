@@ -78,9 +78,9 @@ public class Syntax {
     
     
     // Check lex
-    static void checkLex(int Lex, String Message) throws Exception {
+    static void checkLex(int Lex, String LexStr) throws Exception {
         if(Lexer.CurrentLex != Lex){
-            ErrorMessage.Expected(Message + " current = " + Lexer.CurrentLex + " Lex = " + Lex);
+            ErrorMessage.Expected("Current = " + Lexer.CurrentLex + " Lex = " + Lex + ". " + LexStr);
         }
         else{
             Lexer.NextLex();
@@ -698,7 +698,6 @@ public class Syntax {
         Module();
         Table.closeScope();
         Table.closeScope();
-//        VM.Result += "\nCompilation complete.\n";
     }
 
 }

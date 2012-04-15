@@ -13,11 +13,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 import java.util.HashMap;
-import java.util.Collection;
-import java.util.Collections;
 
 
-public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullStackState>{
+public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     
     static final int MemorySize = 8 * 1024;
     
@@ -126,6 +124,7 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
     }
     
     void runVM(){
+        
         FullStackState FStackState;
         Vector Row, StackState2;
         Result = "";
@@ -153,22 +152,8 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                 FStackState = new FullStackState(PC-1, StackStatesCounter-1, StackState2, Result);
                 publish(FStackState);
                 StackStates.add(FStackState);
-
-//                System.out.println("PC = " + FStackState.PC + "  StackStateNumber = " + FStackState.StackStateNumber);
-//                System.out.println("State :");
-//                for(Object x : FStackState.State){
-//                    System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//                }
-//                System.out.println("====================");
                 
-//                for(FullStackState F_StackState : StackStates){
-//                    System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
-//                    System.out.println("State :");
-//                    for(Object x : F_StackState.State){
-//                        System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//                    }
-//                    System.out.println("====================");
-//                }
+                mainFrame.setStackStateNumber(StackStates.size());
                 
                 try{
                     Thread.sleep(mainFrame.getDelay() * 1000);
@@ -176,80 +161,68 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                 catch(InterruptedException e){
                     //запись в лог
                 }
+                
                 switch(Command){
                     case CommandAdd :
                         SP++;
                         Memory[SP] += Memory[SP-1];
-                        //CommandStr = "ADD";
                         break;
 
                     case CommandSub :
                         SP++;
                         Memory[SP] -= Memory[SP-1];
-                        //CommandStr = "SUB";
                         break;
 
                     case CommandMult :
                         SP++;
                         Memory[SP] *= Memory[SP-1];
-                        //CommandStr = "MULT";
                         break;
 
                     case CommandDiv :
                         SP++;
                         Memory[SP] /= Memory[SP-1];
-                        //CommandStr = "DIV";
                         break;
 
                     case CommandMod :
                         SP++;
                         Memory[SP] %= Memory[SP-1];
-                        //CommandStr = "MOD";
                         break;
 
                     case CommandNeg :
                         Memory[SP] = -Memory[SP];
-                        //CommandStr = "NEG";
                         break;
 
                     case CommandLoad :
                         Memory[SP] = Memory[Memory[SP]];
-                        //CommandStr = "LOAD";
                         break;
 
                     case CommandSave :
                         Memory[Memory[SP+1]] = Memory[SP];
                         SP+=2;
-                        //CommandStr = "SAVE";
                         break;
 
                     case CommandDup :
                         SP--;
                         Memory[SP] = Memory[SP+1];
-                        //CommandStr = "DUP";
                         break;
 
                     case CommandDrop :
                         SP++;
-                        //CommandStr = "DROP";
                         break;
 
                     case CommandSwap :
                         Buffer = Memory[SP];
                         Memory[SP] = Memory[SP+1];
                         Memory[SP+1] = Buffer;
-                        //CommandStr = "SWAP";
                         break;
 
                     case CommandOver :
                         SP--;
                         Memory[SP] = Memory[SP+2];
-                        //CommandStr = "OVER";
                         break;
 
                     case CommandGoTo :
                         PC = Memory[SP++];
-                        //CommandStr = "GOTO";
                         break;
 
                     case CommandIfEq :
@@ -257,7 +230,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFEQ";
                         break;
 
                     case CommandIfNotEq :
@@ -265,7 +237,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFNE";
                         break;
 
                     case CommandIfLessEq :
@@ -273,7 +244,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFLE";
                         break;
 
                     case CommandIfLessThan :
@@ -281,7 +251,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFLT";
                         break;
 
                     case CommandIfGreaterEq :
@@ -289,7 +258,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFGE";
                         break;
 
                     case CommandIfGreaterThan :
@@ -297,7 +265,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                             PC = Memory[SP];
                         }
                         SP += 3;
-                        //CommandStr = "IFGT";
                         break;
 
 //                        case CommandInput :
@@ -314,7 +281,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                         }
                         Result += Memory[SP+1];
                         SP += 2;
-                        //CommandStr = "OUTPUT";
                         break;
 
                     case CommandOutLn :
@@ -323,7 +289,6 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                         break;
 
                     case CommandStop :
-                        //CommandStr = "STOP";
                         break;
 
                     default :
@@ -331,6 +296,7 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
                         break;
                 }
             }
+            
             if(Command >= 0){
                 CommandStr = Command.toString();
             }
@@ -353,33 +319,7 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
             publish(FStackState);
             StackStates.add(FStackState);
             
-//            System.out.println("PC = " + FStackState.PC + "  StackStateNumber = " + FStackState.StackStateNumber);
-//            System.out.println("State :");
-//            for(Object x : FStackState.State){
-//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//            }
-//            System.out.println("====================");
-            
-//            for(FullStackState F_StackState : StackStates){
-//                System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
-//                System.out.println("State :");
-//                for(Object x : F_StackState.State){
-//                    System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//                }
-//                System.out.println("====================");
-//            }
-            
-//            if(!mainFrame.getStepForward()){
-//                try{
-//                    Thread.sleep(mainFrame.getDelay() * 1000);
-//                }
-//                catch(InterruptedException e){
-//                    //запись в лог
-//                }
-//            }
-//            
-            if(mainFrame.getStepForward()){ //  Это не успевает
-                //mainFrame.Running = false;
+            if(mainFrame.getStepForward()){ //  
                 mainFrame.setRunning(false);
                 mainFrame.Paused = true;
                 mainFrame.setStepForward(false);
@@ -394,36 +334,26 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
             }
             
             synchronized(monitor){
-                while(mainFrame.Paused || !mainFrame.getRunning()/*!mainFrame.Running*/){
+                while(mainFrame.Paused || !mainFrame.getRunning()){
                     try{
                         monitor.wait();
                     }
                     catch(InterruptedException e){
-                        //System.err.println("Monitor exception: "+e.getMessage());
                         Thread.currentThread().stop();
                     }
                 }
             }
-
+            mainFrame.setStackStateNumber(StackStates.size());
         }
         StackState.clear();
         FStackState = new FullStackState(PC-1, StackStatesCounter/*-1*/, StackState, Result);
         publish(FStackState);
         StackStates.add(FStackState);
-
+        mainFrame.setStackStateNumber(StackStates.size());
         Result += '\n';
         if(SP < MemorySize){
             Result += "Return code: " + Memory[SP] + "\n\n";
         }
-        
-//        for(FullStackState F_StackState : StackStates){
-//            System.out.println("PC = " + F_StackState.PC + "  StackStateNumber = " + F_StackState.StackStateNumber);
-//            System.out.println("State :");
-//            for(Object x : F_StackState.State){
-//                System.out.println(((Vector)x).get(0) + " " + ((Vector)x).get(1));
-//            }
-//            System.out.println("====================");
-//        }
     }
     
     @Override
@@ -445,6 +375,7 @@ public class VM extends SwingWorker<Vector/*Collection*/<FullStackState>, FullSt
         mainFrame.setStepForwardEnabled(true);
         mainFrame.setStepBackEnabled(false);
         
+        mainFrame.clearStackStates();
         mainFrame.setStackStateNumber(-1);
     }
     
