@@ -79,11 +79,11 @@ public class MainFrame extends javax.swing.JFrame{
                 return false;
             }
         };
-        VariablesTable.setModel(VariablesTableModel);
+        //VariablesTable.setModel(VariablesTableModel);
         
         ByteCodeTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         StackStatesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        VariablesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        //VariablesTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         
         StackStates = new Vector<FullStackState>();
         
@@ -124,9 +124,6 @@ public class MainFrame extends javax.swing.JFrame{
         DelayLabel = new javax.swing.JLabel();
         DelaySpinner = new javax.swing.JSpinner();
         PauseButton = new javax.swing.JButton();
-        jScrollPane5 = new javax.swing.JScrollPane();
-        VariablesTable = new javax.swing.JTable();
-        jLabel1 = new javax.swing.JLabel();
         StopButton = new javax.swing.JButton();
         MenuBar = new javax.swing.JMenuBar();
         FileMenuItem = new javax.swing.JMenu();
@@ -147,7 +144,7 @@ public class MainFrame extends javax.swing.JFrame{
         OpenFileChooser.setDialogTitle("Source code file");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("JavaO");
+        setTitle("jOVMEmulator");
 
         SourceCodeTextArea.setColumns(20);
         SourceCodeTextArea.setRows(5);
@@ -261,21 +258,6 @@ public class MainFrame extends javax.swing.JFrame{
                 PauseButtonActionPerformed(evt);
             }
         });
-
-        VariablesTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane5.setViewportView(VariablesTable);
-
-        jLabel1.setText("Variables");
 
         StopButton.setText("Stop");
         StopButton.setMaximumSize(new java.awt.Dimension(100, 30));
@@ -428,14 +410,10 @@ public class MainFrame extends javax.swing.JFrame{
                         .addComponent(StepForwardButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(StepBackButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(StackStatesLabel)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(StackStatesLabel))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -455,12 +433,11 @@ public class MainFrame extends javax.swing.JFrame{
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(SourceCodeLabel)
                     .addComponent(ByteCodeLabel)
-                    .addComponent(StackStatesLabel)
-                    .addComponent(jLabel1))
+                    .addComponent(StackStatesLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)
                         .addComponent(InputLabel)
@@ -470,8 +447,7 @@ public class MainFrame extends javax.swing.JFrame{
                         .addComponent(ResultLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -568,10 +544,10 @@ public class MainFrame extends javax.swing.JFrame{
         this.StackStates.clear();
     }
     
-    public void setVariables(Vector Variables){
-        VariablesTableModel.setDataVector(Variables, VariablesTableColumnHeaders);
-        VariablesTable.setModel(VariablesTableModel);
-    }
+//    public void setVariables(Vector Variables){
+//        VariablesTableModel.setDataVector(Variables, VariablesTableColumnHeaders);
+//        VariablesTable.setModel(VariablesTableModel);
+//    }
     
     public void setResult(String Result){
         ResultTextArea.setText(Result);
@@ -1059,12 +1035,9 @@ public class MainFrame extends javax.swing.JFrame{
     private javax.swing.JButton StepForwardButton;
     private javax.swing.JButton StopButton;
     private javax.swing.JMenuItem StopMenuItem;
-    private javax.swing.JTable VariablesTable;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JScrollPane jScrollPane5;
     // End of variables declaration//GEN-END:variables
 }
