@@ -34,6 +34,8 @@ public class MainFrame extends javax.swing.JFrame{
         FileOpened = false;
         Running = false;
         Paused = false;
+        Inputing = false;
+        NegInt = false;
         StepForward = false;
         Stopped = false;
         Recompiled = false;
@@ -44,6 +46,8 @@ public class MainFrame extends javax.swing.JFrame{
         
         StepBackButton.setEnabled(false);
         StepForwardButton.setEnabled(false);
+        
+        InputTextField.setEnabled(false);
 
         OpenFileChooserFilter = new TextFileChooserFilter();
         
@@ -476,12 +480,14 @@ public class MainFrame extends javax.swing.JFrame{
 
     public void clearTextAreas(){
         ResultTextArea.setText("");
+        InputTextField.setText("");
         ByteCodeTable.setModel(new javax.swing.table.DefaultTableModel(null, ByteCodeTableColumns));
         StackStatesTable.setModel(new javax.swing.table.DefaultTableModel(null, StackStatesTableColumns));
     }
     
     private void CompileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CompileButtonActionPerformed
         clearTextAreas();
+        ErrorMessage.clearMessage();
         Text.SourceCode = SourceCodeTextArea.getText().getBytes();
         if(Text.SourceCode.length == 0){
             ResultTextArea.setText("Source code is empty!");
@@ -494,12 +500,16 @@ public class MainFrame extends javax.swing.JFrame{
                 ByteCodeTable.setModel(ByteCodeTableModel);
                 Compiled = true;
                 Paused = false;
+                
+                Inputing = false;
+                NegInt = false;
+                
                 setRunEnabled(true);
                 StepForward = false;
                 StepBack = 0;
                 StepForwardButton.setEnabled(true);
                 StepBackButton.setEnabled(false);
-                StackStateNumber = -1;
+                StackStateNumber = /*-1*/0;
                 BackForwardStack = new Stack<FullStackState>();
                 ResultTextArea.setText(ErrorMessage.getMessage());
             }
@@ -611,6 +621,10 @@ public class MainFrame extends javax.swing.JFrame{
         StepBackButton.setEnabled(isEnabled);
     }
     
+    public void setInputTextFieldEnabled(boolean isEnabled){
+        InputTextField.setEnabled(isEnabled);
+    }
+    
     private void Run() {    
         if(Compiled){
             setPauseEnabled(true);
@@ -620,15 +634,16 @@ public class MainFrame extends javax.swing.JFrame{
             StepBackButton.setEnabled(false);
             StepForwardButton.setEnabled(false);
             setStepForward(false);
+            IntMaxLength = 10;
             if( !Running && !Paused ){
                 Running = true;
                 RunActionPerformed();
             }
             else if(Paused){
-                synchronized(Vm.monitor){
+                synchronized(Vm.PuaseMonitor){
                     Running = true;
                     Paused = false;
-                    Vm.monitor.notifyAll();
+                    Vm.PuaseMonitor.notifyAll();
                 }
             }
         }
@@ -734,28 +749,72 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_RunPauseButtonActionPerformed
 
     private void InputTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_InputTextFieldActionPerformed
-
+        String InputNumberStr = InputTextField.getText();
+        if(InputNumberStr.length() != 0 && 
+                !(InputNumberStr.length() == 1 && InputNumberStr.charAt(0) == '-')){
+            
+            if(Long.valueOf(InputNumberStr) > Integer.MAX_VALUE){
+                ResultTextArea.append("\n" + "Entered number is too big, max value is " + 
+                                        Integer.MAX_VALUE + ". Try again.");
+            }
+            else if(Long.valueOf(InputNumberStr) < Integer.MIN_VALUE){
+                ResultTextArea.append("\n" + "Entered number is too small, min value is " + 
+                                        Integer.MIN_VALUE + ". Try again.");
+            }
+            else{
+                synchronized(Vm.InputMonitor){
+                    Inputing = false;
+                    InputNumberInt = Integer.valueOf(InputNumberStr).intValue();
+                    Vm.InputMonitor.notifyAll();
+                }
+                
+                InputTextField.setEnabled(false);
+                
+                //setPauseEnabled(true);
+                
+//                if()
+//                setRunEnabled(false);
+//                setStopEnabled(false);
+//                setStepBackEnabled(false);
+//                setStepForwardEnabled(false);
+//                else
+            
+            }
+        }
+        else {
+            ResultTextArea.append("\n" + "Entered number is empty. Try again.");
+        }
+        NegInt = false;
+        IntMaxLength = 10;
+        InputTextField.setText("");
     }//GEN-LAST:event_InputTextFieldActionPerformed
+
+    
+    public int getInputNumber(){
+        return InputNumberInt;
+    }
 
     private void InputTextFieldKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_InputTextFieldKeyTyped
         char a = evt.getKeyChar();
-        if(!Character.isDigit(a)){
+
+        //System.out.println(InputTextField.getText().length() + "   " + IntMaxLength);
+        
+        if(a == '-' && InputTextField.getText().length() == 0 ){
+            NegInt = true;
+            IntMaxLength++;
+        }
+        else if(!Character.isDigit(a) || InputTextField.getText().length() > IntMaxLength-1){
             evt.consume();
         }
+        //System.out.println(IntMaxLength);
     }//GEN-LAST:event_InputTextFieldKeyTyped
 
     private void DelaySpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_DelaySpinnerStateChanged
-//        if(Running || Paused){
-//            Vm.setDelay(((Integer)DelaySpinner.getValue()).intValue() * 1000);
-//        }
-//        else{
-//            DelayChanged = true;
-//            Delay = ((Integer)DelaySpinner.getValue()).intValue();
-//        }
+
     }//GEN-LAST:event_DelaySpinnerStateChanged
 
     private void PauseButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PauseButtonActionPerformed
-        synchronized(Vm.monitor){
+        synchronized(Vm.PuaseMonitor){
             Paused = true;
             Running = false;
         }
@@ -770,16 +829,17 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_PauseButtonActionPerformed
 
     private void StepForwardButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepForwardButtonActionPerformed
+        setCompileEnabled(false);
         if(StepBack == 0){
             if( !Running && !Paused ){
                 setStepForward(true);
                 RunActionPerformed();
             }
             else if(Paused){
-                synchronized(Vm.monitor){
+                synchronized(Vm.PuaseMonitor){
                     Running = true;// - ?
                     Paused = false;// - ?
-                    Vm.monitor.notifyAll();
+                    Vm.PuaseMonitor.notifyAll();
                 }
                 setStepForward(true);
             }
@@ -798,6 +858,14 @@ public class MainFrame extends javax.swing.JFrame{
             }
         }
 
+        try{
+            Thread.sleep(100);
+        }
+        catch(InterruptedException e){
+            //запись в лог
+        }
+        
+        
         if(StackStateNumber > 0){
             StepBackButton.setEnabled(true);
         }
@@ -851,6 +919,12 @@ public class MainFrame extends javax.swing.JFrame{
     }//GEN-LAST:event_StopMenuItemActionPerformed
 
     private void StepBackButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_StepBackButtonActionPerformed
+        try{
+            Thread.sleep(500);
+        }
+        catch(InterruptedException e){
+            //запись в лог
+        }
         StepBack++;
         StackStateNumber--;
         
@@ -904,6 +978,8 @@ public class MainFrame extends javax.swing.JFrame{
         });
     }
     
+    private int InputNumberInt;
+    private int IntMaxLength = 10;
     
     private boolean Compiled;
     private boolean Recompiled;
@@ -913,6 +989,8 @@ public class MainFrame extends javax.swing.JFrame{
     public boolean StepForward;
     public int StepBack;
     boolean Paused;
+    boolean Inputing;
+    private boolean NegInt;
     
     private AboutFrame aboutFrame;
     private HelpContentsFrame helpContentsFrame;

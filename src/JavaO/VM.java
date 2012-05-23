@@ -76,7 +76,9 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     };
     
     static int Memory[];
-    /*static */final Object monitor = new Object();
+    
+    final Object PuaseMonitor = new Object();
+    final Object InputMonitor = new Object();
     
 //    static void readln(){
 //        try{
@@ -267,12 +269,40 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
                         SP += 3;
                         break;
 
-//                        case CommandInput :
-//                            System.out.println("Input :");
-//                            SP--;
-//                            Memory[SP] = readInt();
-//                            CommandStr = "INPUT";
-//                            break;
+                    case CommandInput :
+                        mainFrame.setRunEnabled(false);
+                        mainFrame.setStepBackEnabled(false);
+                        mainFrame.setStepForwardEnabled(false);
+                        mainFrame.setPauseEnabled(false);
+                        
+                        //mainFrame.setStopEnabled(true);
+                        mainFrame.setInputTextFieldEnabled(true);
+                        mainFrame.Inputing = true;
+                        
+                        synchronized(InputMonitor){
+                            while(mainFrame.Inputing){
+                                try{
+                                    InputMonitor.wait();
+                                }
+                                catch(InterruptedException e){
+                                    Thread.currentThread().stop();
+                                }
+                            }
+                        }
+                            
+                        SP--;
+                        Memory[SP] = mainFrame.getInputNumber();
+                        
+                        if(mainFrame.getStepForward()){
+                            mainFrame.setRunEnabled(true);
+                            mainFrame.setStepBackEnabled(true);
+                            mainFrame.setStepForwardEnabled(true);
+                        }
+                        else{
+                            mainFrame.setPauseEnabled(true);
+                        }
+                        
+                        break;
 
                     case CommandOutput :
                         int Tab = Memory[SP] - (new Integer(Memory[SP+1])).toString().length();
@@ -332,11 +362,10 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
                     //запись в лог
                 }
             }
-            
-            synchronized(monitor){
+            synchronized(PuaseMonitor){
                 while(mainFrame.Paused || !mainFrame.getRunning()){
                     try{
-                        monitor.wait();
+                        PuaseMonitor.wait();
                     }
                     catch(InterruptedException e){
                         Thread.currentThread().stop();
@@ -344,6 +373,7 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
                 }
             }
             mainFrame.setStackStateNumber(StackStates.size());
+            //System.out.println(StackStates.size());
         }
         StackState.clear();
         FStackState = new FullStackState(PC-1, StackStatesCounter/*-1*/, StackState, Result);

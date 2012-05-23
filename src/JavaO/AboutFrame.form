@@ -52,6 +52,9 @@
   </Layout>
   <SubComponents>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <Properties>
+        <Property name="toolTipText" type="java.lang.String" value=""/>
+      </Properties>
       <AuxValues>
         <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
       </AuxValues>
@@ -62,7 +65,7 @@
           <Properties>
             <Property name="contentType" type="java.lang.String" value="text/html"/>
             <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;  &lt;head&gt;&#xa;  &lt;/head&gt;&#xa;  &lt;body&gt;&#xa;      &#x9;&lt;h3&gt;jOVMEmulator 0.1&lt;/h3&gt; is IDE for O programming language and VM emulator for O virtual machine. &lt;br&gt;&#xa;&#x9;For more information and source code, please visit &lt;a href=&quot;http://github.com/litvinenkonikita/JavaO/&quot;&gt;github.com/litvinenkonikita/JavaO/&lt;/a&gt;.&lt;br&gt;&#xa;  &lt;/body&gt;&#xa;&lt;/html&gt;&#xa;"/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;   &lt;head&gt;   &lt;/head&gt;   &lt;body&gt;       &#x9;&lt;h3&gt;jOVMEmulator 0.1&lt;/h3&gt; is IDE for O programming language and VM emulator for O virtual machine. &lt;br&gt; &#x9;For more information and source code, please visit &lt;a href=&quot;http://github.com/litvinenkonikita/JavaO/&quot;&gt;http://www.github.com/litvinenkonikita/JavaO/&lt;/a&gt; and &lt;a href=&quot;http://www.uni-vologda.ac.ru/~c3c/landt/contents.htm&quot;&gt;http://www.uni-vologda.ac.ru/~c3c/landt/contents.htm&lt;/a&gt; .&lt;br&gt;&lt;/body&gt; &lt;/html&gt; "/>
           </Properties>
         </Component>
       </SubComponents>

@@ -34,8 +34,10 @@ public class HelpContentsFrame extends javax.swing.JFrame {
         HelpContentsTextPane = new javax.swing.JTextPane();
         CloseButton = new javax.swing.JButton();
 
+        HelpContentsTextPane.setContentType("text/html");
         HelpContentsTextPane.setEditable(false);
-        HelpContentsTextPane.setText("Help contents here.");
+        HelpContentsTextPane.setText("<html>\n  <head>\n\n  </head>\n  <body>\n\t<h2>O language syntax:</h2>\n\n<b>Module</b> = <br>\n\tMODULE Name  “;”<br>\n\t[Import]<br>\n\tDeclSeq<br>\n\t[BEGIN StatSeq]<br>\n\tEND Name “.”.\n<br><br>\n<b>Import</b> = IMPORT Name {“,” Name } “;”.\n<br><br>\n<b>DeclSeq</b> = {CONST {DeclConst “;”} } | {VAR {DeclVar “;”} }.\n<br><br>\n<b>DeclConst</b> = Name “=” ConstExpr.\n<br><br>\n<b>DeclVar</b> = Name { “,”Name }  “:” Type.\n<br><br>\n<b>Type</b> = Name.\n<br><br>\n<b>StatSeq</b> = Statement {“,” Statement } .\n<br><br>\n<b>Statement</b> = [<br>\n\tVar “=” Expr <br>\n\t|<br>\n\t[Name “.”] Name [ “(” [Param {“,” Param } ] “)” ] <br>\n\t|<br>\n\tIF Expr THEN StatSeq <br>\n\t{ELSIF Expr THEN StatSeq} <br>\n\t[ELSE StatSeq] END <br>\n\t|<br>\n\tWHILE Expr DO StatSeq END <br>\n].\n<br><br>\n<b>Param</b> = Var | Expr .\n<br><br>\n<b>Var</b> = Name.\n<br><br>\n<b>ConstExpr</b> = [“+” | “-“ ] Name | Num.\n<br><br>\n<b>Expr</b> = SImpleExpr [Rel SImpleExpr].\n<br><br>\n<b>SImpleExpr</b> = [“+” | “-“] Term {Sum Term}.\n<br><br>\n<b>Term</b> = Factor {Mult Factor} .\n<br><br>\n<b>Factor</b> = <br>\n\tName<br>\n\t|<br>\n\tNum<br>\n\t|<br>\n\t“(” Expr “)”.<br><br>\n\n<b>Rel</b> = \"=\" | \"#\" | \">\" | “>=” | “<” | “<=” .\n<br><br>\n<b>Sum</b> = \"+\" | \"-\" .\n<br><br>\n<b>Mult</b> = \"*\" | “DIV”| “MOD”.\n<br><br>\n<b>Name</b> = Letter {[“Letter”|”Digit”}.\n<br><br>\n<b>Letter</b> = \"A\"|…|\"Z\"|\"a\"|…|\"z\".\n<br><br>\n<b>Num</b> = Digit { Digit  } .\n<br><br>\n<b>Digit</b> = \"0\"|…|\"9\".\n\n<br>\n<br>\n<br>\n\n\t<h2>Keywords:</h2>\n\nBEGIN,<br> \nCONST,<br> \nVAR,<br> \nINTEGER,<br> \nEND,<br> \nIF,<br> \nTHEN,<br> \nELSE,<br> \nELSIF,<br> \nWHILE,<br> \nIMPORT,<br> \nMODULE,<br> \nDIV,<br> \nMOD,<br> \nDO.\n\n<br>\n<br>\n<br>\n\n\t<h2>Program example:</h2>\n\nMODULE Example; (*This is an example O language program!*)<br>\nIMPORT Out;<br>\nVAR i : INTEGER;<br>\nBEGIN<br>\ni := 1;<br>\nOut.Int(i, 0);<br>\nEND Example.\n<br>\n<br>\n<br>\n\n\t<h2>O virtual machine instructions set:</h2>\n\nSTOP,<br>\nADD,<br>\nSUB,<br>\nMULT,<br>\nDIV,<br>\nMOD,<br>\nNEG,<br>\nLOAD,<br>\nSAVE,<br>\nDUP,<br>\nDROP,<br>\nSWAP,<br>\nOVER,<br>\nGOTO<br>\n IFEQ,<br>\nIFNE,<br>\nIFLT,<br>\nIFLE,<br>\nIFGT,<br>\nIFGE,<br>\nIN,<br>\nOUT,<br>\nOUTLN.\n\n  </body>\n</html>\n");
+        HelpContentsTextPane.setToolTipText("");
         jScrollPane1.setViewportView(HelpContentsTextPane);
 
         CloseButton.setText("   Close   ");
@@ -53,18 +55,18 @@ public class HelpContentsFrame extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 538, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(161, 161, 161)
+                        .addGap(242, 242, 242)
                         .addComponent(CloseButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(CloseButton)
                 .addContainerGap())
         );

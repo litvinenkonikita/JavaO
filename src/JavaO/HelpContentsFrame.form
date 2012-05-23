@@ -21,12 +21,12 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="376" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="538" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="161" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="242" max="-2" attributes="0"/>
                       <Component id="CloseButton" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -36,10 +36,10 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" min="-2" pref="198" max="-2" attributes="0"/>
-              <EmptySpace pref="48" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" pref="610" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
               <Component id="CloseButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -56,8 +56,10 @@
       <SubComponents>
         <Component class="javax.swing.JTextPane" name="HelpContentsTextPane">
           <Properties>
+            <Property name="contentType" type="java.lang.String" value="text/html"/>
             <Property name="editable" type="boolean" value="false"/>
-            <Property name="text" type="java.lang.String" value="Help contents here."/>
+            <Property name="text" type="java.lang.String" value="&lt;html&gt;&#xa;  &lt;head&gt;&#xa;&#xa;  &lt;/head&gt;&#xa;  &lt;body&gt;&#xa;&#x9;&lt;h2&gt;O language syntax:&lt;/h2&gt;&#xa;&#xa;&lt;b&gt;Module&lt;/b&gt; = &lt;br&gt;&#xa;&#x9;MODULE Name  &#x201c;;&#x201d;&lt;br&gt;&#xa;&#x9;[Import]&lt;br&gt;&#xa;&#x9;DeclSeq&lt;br&gt;&#xa;&#x9;[BEGIN StatSeq]&lt;br&gt;&#xa;&#x9;END Name &#x201c;.&#x201d;.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Import&lt;/b&gt; = IMPORT Name {&#x201c;,&#x201d; Name } &#x201c;;&#x201d;.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;DeclSeq&lt;/b&gt; = {CONST {DeclConst &#x201c;;&#x201d;} } | {VAR {DeclVar &#x201c;;&#x201d;} }.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;DeclConst&lt;/b&gt; = Name &#x201c;=&#x201d; ConstExpr.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;DeclVar&lt;/b&gt; = Name { &#x201c;,&#x201d;Name }  &#x201c;:&#x201d; Type.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Type&lt;/b&gt; = Name.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;StatSeq&lt;/b&gt; = Statement {&#x201c;,&#x201d; Statement } .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Statement&lt;/b&gt; = [&lt;br&gt;&#xa;&#x9;Var &#x201c;=&#x201d; Expr &lt;br&gt;&#xa;&#x9;|&lt;br&gt;&#xa;&#x9;[Name &#x201c;.&#x201d;] Name [ &#x201c;(&#x201d; [Param {&#x201c;,&#x201d; Param } ] &#x201c;)&#x201d; ] &lt;br&gt;&#xa;&#x9;|&lt;br&gt;&#xa;&#x9;IF Expr THEN StatSeq &lt;br&gt;&#xa;&#x9;{ELSIF Expr THEN StatSeq} &lt;br&gt;&#xa;&#x9;[ELSE StatSeq] END &lt;br&gt;&#xa;&#x9;|&lt;br&gt;&#xa;&#x9;WHILE Expr DO StatSeq END &lt;br&gt;&#xa;].&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Param&lt;/b&gt; = Var | Expr .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Var&lt;/b&gt; = Name.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;ConstExpr&lt;/b&gt; = [&#x201c;+&#x201d; | &#x201c;-&#x201c; ] Name | Num.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Expr&lt;/b&gt; = SImpleExpr [Rel SImpleExpr].&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;SImpleExpr&lt;/b&gt; = [&#x201c;+&#x201d; | &#x201c;-&#x201c;] Term {Sum Term}.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Term&lt;/b&gt; = Factor {Mult Factor} .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Factor&lt;/b&gt; = &lt;br&gt;&#xa;&#x9;Name&lt;br&gt;&#xa;&#x9;|&lt;br&gt;&#xa;&#x9;Num&lt;br&gt;&#xa;&#x9;|&lt;br&gt;&#xa;&#x9;&#x201c;(&#x201d; Expr &#x201c;)&#x201d;.&lt;br&gt;&lt;br&gt;&#xa;&#xa;&lt;b&gt;Rel&lt;/b&gt; = &quot;=&quot; | &quot;#&quot; | &quot;&gt;&quot; | &#x201c;&gt;=&#x201d; | &#x201c;&lt;&#x201d; | &#x201c;&lt;=&#x201d; .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Sum&lt;/b&gt; = &quot;+&quot; | &quot;-&quot; .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Mult&lt;/b&gt; = &quot;*&quot; | &#x201c;DIV&#x201d;| &#x201c;MOD&#x201d;.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Name&lt;/b&gt; = Letter {[&#x201c;Letter&#x201d;|&#x201d;Digit&#x201d;}.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Letter&lt;/b&gt; = &quot;A&quot;|&#x2026;|&quot;Z&quot;|&quot;a&quot;|&#x2026;|&quot;z&quot;.&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Num&lt;/b&gt; = Digit { Digit  } .&#xa;&lt;br&gt;&lt;br&gt;&#xa;&lt;b&gt;Digit&lt;/b&gt; = &quot;0&quot;|&#x2026;|&quot;9&quot;.&#xa;&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&#xa;&#x9;&lt;h2&gt;Keywords:&lt;/h2&gt;&#xa;&#xa;BEGIN,&lt;br&gt; &#xa;CONST,&lt;br&gt; &#xa;VAR,&lt;br&gt; &#xa;INTEGER,&lt;br&gt; &#xa;END,&lt;br&gt; &#xa;IF,&lt;br&gt; &#xa;THEN,&lt;br&gt; &#xa;ELSE,&lt;br&gt; &#xa;ELSIF,&lt;br&gt; &#xa;WHILE,&lt;br&gt; &#xa;IMPORT,&lt;br&gt; &#xa;MODULE,&lt;br&gt; &#xa;DIV,&lt;br&gt; &#xa;MOD,&lt;br&gt; &#xa;DO.&#xa;&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&#xa;&#x9;&lt;h2&gt;Program example:&lt;/h2&gt;&#xa;&#xa;MODULE Example; (*This is an example O language program!*)&lt;br&gt;&#xa;IMPORT Out;&lt;br&gt;&#xa;VAR i : INTEGER;&lt;br&gt;&#xa;BEGIN&lt;br&gt;&#xa;i := 1;&lt;br&gt;&#xa;Out.Int(i, 0);&lt;br&gt;&#xa;END Example.&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&lt;br&gt;&#xa;&#xa;&#x9;&lt;h2&gt;O virtual machine instructions set:&lt;/h2&gt;&#xa;&#xa;STOP,&lt;br&gt;&#xa;ADD,&lt;br&gt;&#xa;SUB,&lt;br&gt;&#xa;MULT,&lt;br&gt;&#xa;DIV,&lt;br&gt;&#xa;MOD,&lt;br&gt;&#xa;NEG,&lt;br&gt;&#xa;LOAD,&lt;br&gt;&#xa;SAVE,&lt;br&gt;&#xa;DUP,&lt;br&gt;&#xa;DROP,&lt;br&gt;&#xa;SWAP,&lt;br&gt;&#xa;OVER,&lt;br&gt;&#xa;GOTO&lt;br&gt;&#xa; IFEQ,&lt;br&gt;&#xa;IFNE,&lt;br&gt;&#xa;IFLT,&lt;br&gt;&#xa;IFLE,&lt;br&gt;&#xa;IFGT,&lt;br&gt;&#xa;IFGE,&lt;br&gt;&#xa;IN,&lt;br&gt;&#xa;OUT,&lt;br&gt;&#xa;OUTLN.&#xa;&#xa;  &lt;/body&gt;&#xa;&lt;/html&gt;&#xa;"/>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
           </Properties>
         </Component>
       </SubComponents>

@@ -40,9 +40,11 @@ public class AboutFrame extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("About");
 
+        jScrollPane1.setToolTipText("");
+
         AboutTextPane.setContentType("text/html");
         AboutTextPane.setEditable(false);
-        AboutTextPane.setText("<html>\n  <head>\n  </head>\n  <body>\n      \t<h3>jOVMEmulator 0.1</h3> is IDE for O programming language and VM emulator for O virtual machine. <br>\n\tFor more information and source code, please visit <a href=\"http://github.com/litvinenkonikita/JavaO/\">github.com/litvinenkonikita/JavaO/</a>.<br>\n  </body>\n</html>\n");
+        AboutTextPane.setText("<html>   <head>   </head>   <body>       \t<h3>jOVMEmulator 0.1</h3> is IDE for O programming language and VM emulator for O virtual machine. <br> \tFor more information and source code, please visit <a href=\"http://github.com/litvinenkonikita/JavaO/\">http://www.github.com/litvinenkonikita/JavaO/</a> and <a href=\"http://www.uni-vologda.ac.ru/~c3c/landt/contents.htm\">http://www.uni-vologda.ac.ru/~c3c/landt/contents.htm</a> .<br></body> </html> ");
         jScrollPane1.setViewportView(AboutTextPane);
 
         CloseButton.setText("   Close   ");

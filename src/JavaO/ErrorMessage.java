@@ -34,4 +34,8 @@ public class ErrorMessage {
     public static boolean getOk(){
         return Ok;
     }
+    
+    public static void clearMessage(){
+        Message = "";
+    }
 }
