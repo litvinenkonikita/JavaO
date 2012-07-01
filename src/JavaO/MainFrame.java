@@ -170,7 +170,7 @@ public class MainFrame extends javax.swing.JFrame{
             }
         });
 
-        ByteCodeLabel.setText("Byte-code");
+        ByteCodeLabel.setText("OVM-code");
 
         StackStatesLabel.setText("Stack");
 

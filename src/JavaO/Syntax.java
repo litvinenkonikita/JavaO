@@ -49,11 +49,12 @@ public class Syntax {
         String CommandDesc = new String();
         int PC = 0;
         int Memory[] = CodeGen.getMemory();
-        while((Command = Memory[PC++]) != VM.CommandStop){
+        //System.out.println("CodeGen.PC = " + CodeGen.PC);
+        while((Command = Memory[PC++]) != VM.CommandStop/* || PC != CodeGen.PC*/){
             if(Command >= 0){
                 CommandStr = Command.toString();
                 if(VariablesMap.containsKey(PC)){
-                    CommandDesc = "variable "+VariablesMap.get(PC);
+                    CommandDesc = "variable "+VariablesMap.get(PC); // ?
                 }
                 else{
                     if(PC == getByteCodeCount()-1){
@@ -71,6 +72,7 @@ public class Syntax {
             Row = new Vector(Arrays.asList(PC-1, CommandStr, CommandDesc));
             ResultByteCodeVector.add(Row);
         }
+        //System.out.println("PC = " + PC + "   CodeGen.PC = " + CodeGen.PC);
         Row = new Vector(Arrays.asList(PC-1, "STOP", "command"));
         ResultByteCodeVector.add(Row);
         return ResultByteCodeVector;
@@ -80,7 +82,7 @@ public class Syntax {
     // Check lex
     static void checkLex(int Lex, String LexStr) throws Exception {
         if(Lexer.CurrentLex != Lex){
-            ErrorMessage.Expected("Current = " + Lexer.CurrentLex + " Lex = " + Lex + ". " + LexStr);
+            ErrorMessage.Expected(/*"Current = " + Lexer.CurrentLex + " Lex = " + Lex + ". " + */LexStr);
         }
         else{
             Lexer.NextLex();
@@ -466,7 +468,7 @@ public class Syntax {
                 return;
                 
             case StProcHALT :
-                CodeGen.Command(ConstExpr());
+                CodeGen.Const(ConstExpr());
                 CodeGen.Command(VM.CommandStop);
                 return;
         }
@@ -615,7 +617,7 @@ public class Syntax {
         if(Lexer.CurrentLex == Lexer.LexName){
             Table.NewName(Lexer.CurrentName, Table.CategoryModule);
             if(Lexer.CurrentName.compareTo("In") == 0){
-                Table.enterName("In.open", Table.CategoryStProc, Table.TypeNone, StProcInOpen);
+                Table.enterName("In.Open", Table.CategoryStProc, Table.TypeNone, StProcInOpen);
                 Table.enterName("In.Int", Table.CategoryStProc, Table.TypeNone, StProcInInt);
             }
             else if(Lexer.CurrentName.compareTo("Out") == 0){

@@ -79,26 +79,9 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
     
     final Object PuaseMonitor = new Object();
     final Object InputMonitor = new Object();
-    
-//    static void readln(){
-//        try{
-//            while(System.in.read() !=  '\n');
-//        }
-//        catch(IOException e){
-//            
-//        }
-//    }
-    
+
     private static StreamTokenizer input = 
             new StreamTokenizer(new InputStreamReader(System.in));
-    
-//    static int readInt(){
-//        try{
-//            input.nextToken();
-//        }
-//        catch(IOException e){}
-//        return (int)input.nval;
-//    }
     
     String Result;
     private HashMap<Integer, String> VariablesMap;
@@ -373,7 +356,6 @@ public class VM extends SwingWorker<Vector<FullStackState>, FullStackState>{
                 }
             }
             mainFrame.setStackStateNumber(StackStates.size());
-            //System.out.println(StackStates.size());
         }
         StackState.clear();
         FStackState = new FullStackState(PC-1, StackStatesCounter/*-1*/, StackState, Result);

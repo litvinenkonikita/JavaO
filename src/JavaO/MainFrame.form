@@ -297,7 +297,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="ByteCodeLabel">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Byte-code"/>
+        <Property name="text" type="java.lang.String" value="OVM-code"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="StackStatesLabel">
